@@ -1,0 +1,252 @@
+@import "tailwindcss";
+
+:root {
+  --couleur-primaire: #2E9BE0;
+  --couleur-primaire-fonce: #1E7DBE;
+  --couleur-fond-clair: #E8F3FB;
+  --couleur-blanc: #FFFFFF;
+  --couleur-encre: #1A1F2E;
+  --couleur-succes: #15803D;
+  --couleur-erreur: #DC2626;
+  --couleur-attente: #CA8A04;
+
+  --background: var(--couleur-blanc);
+  --foreground: var(--couleur-encre);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-primaire: #2E9BE0;
+  --color-primaire-fonce: #1E7DBE;
+  --color-fond-clair: #E8F3FB;
+  --color-blanc: #FFFFFF;
+  --color-encre: #1A1F2E;
+  --color-succes: #15803D;
+  --color-erreur: #DC2626;
+  --color-attente: #CA8A04;
+
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-work-sans);
+  --font-mono: var(--font-plex-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Focus clavier visible et cohérent sur tout le site */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--couleur-primaire);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@layer components {
+  /* Champs de formulaire harmonisés */
+  .champ {
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid #D1D9E0;
+    background: var(--couleur-blanc);
+    padding: 0.6rem 0.8rem;
+    font-size: 0.95rem;
+    color: var(--couleur-encre);
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+  }
+  .champ::placeholder {
+    color: #8A94A6;
+  }
+  .champ:focus {
+    outline: none;
+    border-color: var(--couleur-primaire);
+    box-shadow: 0 0 0 3px rgb(46 155 224 / 0.18);
+  }
+  .champ:disabled {
+    background: #F3F5F7;
+    color: #9AA3B2;
+    cursor: not-allowed;
+  }
+
+  /* Boutons */
+  .bouton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    border-radius: 0.5rem;
+    padding: 0.55rem 1.1rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out, transform 150ms ease-out;
+    white-space: nowrap;
+  }
+  .bouton:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .bouton-primaire {
+    background: var(--couleur-primaire);
+    color: var(--couleur-blanc);
+  }
+  .bouton-primaire:hover:not(:disabled) {
+    background: var(--couleur-primaire-fonce);
+  }
+  .bouton-succes {
+    background: var(--couleur-succes);
+    color: var(--couleur-blanc);
+  }
+  .bouton-succes:hover:not(:disabled) {
+    background: #116631;
+  }
+  .bouton-secondaire {
+    background: transparent;
+    color: var(--couleur-encre);
+    border: 1px solid #D1D9E0;
+  }
+  .bouton-secondaire:hover:not(:disabled) {
+    background: #F3F5F7;
+    border-color: #B8C2CE;
+  }
+  .bouton-danger {
+    background: transparent;
+    color: var(--couleur-erreur);
+  }
+  .bouton-danger:hover:not(:disabled) {
+    background: #FEF2F2;
+  }
+
+  /* Badges de statut */
+  .badge-statut {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    border-radius: 9999px;
+    padding: 0.15rem 0.65rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .badge-attente {
+    background: #FEF3C7;
+    color: #92660A;
+  }
+  .badge-succes {
+    background: #DCFCE7;
+    color: var(--couleur-succes);
+  }
+  .badge-erreur {
+    background: #FEE2E2;
+    color: var(--couleur-erreur);
+  }
+  .badge-neutre {
+    background: #EEF1F5;
+    color: #4B5565;
+  }
+
+  /* Cartes cliquables réactives au survol (voir section 3.3 des instructions design) */
+  .carte-interactive {
+    transition: transform 200ms ease-out, box-shadow 200ms ease-out, border-color 200ms ease-out;
+  }
+  @media (hover: hover) {
+    .carte-interactive:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -12px rgb(26 31 46 / 0.18);
+    }
+  }
+
+  /* Apparition au défilement (voir section 3.2) : classes pilotées par le composant Reveal.
+     Visible par défaut (avant hydratation JS) pour ne jamais masquer le contenu si le
+     script ne s'exécute pas ou tarde à le faire ; seule la classe .reveal-attente,
+     ajoutée par React une fois monté, cache temporairement l'élément avant révélation. */
+  .reveal {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 550ms ease-out, transform 550ms ease-out;
+  }
+  .reveal.reveal-attente {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  /* Arrivée en douceur (page d'accueil, voir section 3.1) */
+  .arrivee-douce {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: arrivee-douce 600ms ease-out forwards;
+  }
+
+  /* Transition douce pour les confirmations d'action (voir section 3.4) */
+  .confirmation-douce {
+    animation: confirmation-douce 350ms ease-out;
+  }
+
+  /* Pulsation subtile des badges de notification (voir section 3.4) */
+  .pastille-vivante {
+    animation: pastille-vivante 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes arrivee-douce {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes confirmation-douce {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pastille-vivante {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.reveal-attente {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .arrivee-douce {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .carte-interactive:hover {
+    transform: none;
+  }
+  .pastille-vivante,
+  .confirmation-douce {
+    animation: none;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import ContenuFormatte from '@/components/contenu-formatte'
 import Reveal from '@/components/reveal'
+import ZoomableImage from '@/components/zoomable-image'
 
 export const dynamic = 'force-dynamic'
 
@@ -29,7 +30,7 @@ export default async function PageFiguresMabi() {
             <Reveal key={f.id} delayMs={i * 80}>
               <div className="h-full rounded-lg border border-black/5 bg-white p-4 shadow-sm">
                 <div className="mb-3 flex items-center gap-3">
-                  {f.photo_url && <img src={f.photo_url} alt="" className="h-16 w-16 rounded-full object-cover" />}
+                  {f.photo_url && <ZoomableImage src={f.photo_url} alt="" className="h-16 w-16 rounded-full object-cover" />}
                   <div>
                     <p className="font-semibold text-encre">{f.nom}</p>
                     <p className="text-xs text-encre/60">

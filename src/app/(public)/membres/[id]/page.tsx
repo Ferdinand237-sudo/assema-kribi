@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
+import ZoomableImage from '@/components/zoomable-image'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,7 +33,7 @@ export default async function PageProfilPublic({
     <div className="mx-auto max-w-xl px-6 py-12">
       <div className="mb-4 flex items-center gap-4">
         {privacy?.show_photo && profile.avatar_url && (
-          <img src={profile.avatar_url} alt="" className="h-20 w-20 rounded-full object-cover" />
+          <ZoomableImage src={profile.avatar_url} alt="" className="h-20 w-20 rounded-full object-cover" />
         )}
         <div>
           <h1 className="font-display text-2xl font-semibold text-encre">{profile.first_name} {profile.last_name}</h1>

@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import { envoyerMessage } from '../actions'
+import ZoomableImage from '@/components/zoomable-image'
 
 export const dynamic = 'force-dynamic'
 
@@ -39,11 +40,11 @@ export default async function PageConversation({
     .order('created_at', { ascending: true })
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] flex-col bg-fond-casse">
+    <div className="flex h-[calc(100dvh-4rem)] flex-col">
       <div className="mx-auto flex w-full min-h-0 max-w-2xl flex-1 flex-col px-6 py-4">
         <div className="mb-2 flex items-center gap-3 border-b border-black/10 pb-3">
           {autreProfil.avatar_url && (
-            <img src={autreProfil.avatar_url} alt="" className="h-10 w-10 rounded-full object-cover" />
+            <ZoomableImage src={autreProfil.avatar_url} alt="" className="h-10 w-10 rounded-full object-cover" />
           )}
           <div>
             <p className="font-semibold text-encre">{autreProfil.first_name} {autreProfil.last_name}</p>

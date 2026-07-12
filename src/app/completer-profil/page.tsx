@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { completerProfil } from './actions'
+import ZoomableImage from '@/components/zoomable-image'
 
 export default async function PageCompleterProfil({
   searchParams,
@@ -33,7 +34,7 @@ export default async function PageCompleterProfil({
       )}
 
       {profile?.avatar_url && (
-        <img
+        <ZoomableImage
           src={profile.avatar_url}
           alt="Photo de profil"
           className="mb-4 h-16 w-16 rounded-full object-cover"

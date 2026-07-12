@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { mettreAJourProfil, uploaderPhoto, uploaderCV } from './actions'
+import ZoomableImage from '@/components/zoomable-image'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,7 +31,7 @@ export default async function PageMonProfil({
     <div className="mx-auto max-w-2xl px-6 py-10">
       <div className="mb-6 flex items-center gap-4">
         {profile?.avatar_url && (
-          <img src={profile.avatar_url} alt="Photo de profil" className="h-16 w-16 rounded-full object-cover" />
+          <ZoomableImage src={profile.avatar_url} alt="Photo de profil" className="h-16 w-16 rounded-full object-cover" />
         )}
         <div>
           <h1 className="text-2xl font-semibold text-encre">Mon profil</h1>

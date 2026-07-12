@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Reveal from '@/components/reveal'
+import ZoomableImage from '@/components/zoomable-image'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,7 +23,7 @@ export default async function PageBureauExecutif() {
             <Reveal key={m.id} delayMs={i * 80}>
               <a href={`/membres/${m.id}`} className="carte-interactive block h-full rounded-lg border border-black/5 bg-white p-4 text-center shadow-sm">
                 {m.profile_privacy?.show_photo && m.avatar_url && (
-                  <img src={m.avatar_url} alt="" className="mx-auto mb-3 h-20 w-20 rounded-full object-cover" />
+                  <ZoomableImage src={m.avatar_url} alt="" className="mx-auto mb-3 h-20 w-20 rounded-full object-cover" />
                 )}
                 <p className="font-semibold text-encre">{m.first_name} {m.last_name}</p>
                 <p className="text-sm text-primaire">{m.poste_bureau}</p>

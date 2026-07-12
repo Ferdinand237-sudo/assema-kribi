@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import ContenuFormatte from '@/components/contenu-formatte'
+import ZoomableImage from '@/components/zoomable-image'
 
 export const dynamic = 'force-dynamic'
 
@@ -34,7 +35,7 @@ export default async function PageVillage({
         <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {village.village_medias.map((m: any) => (
             <div key={m.id}>
-              <img src={m.url} alt={m.legende ?? ''} className="h-32 w-full rounded-lg object-cover" />
+              <ZoomableImage src={m.url} alt={m.legende ?? ''} className="h-32 w-full rounded-lg object-cover" />
               {m.legende && <p className="mt-1 text-xs text-encre/60">{m.legende}</p>}
             </div>
           ))}
@@ -53,7 +54,7 @@ export default async function PageVillage({
           <h2 className="mb-3 font-display text-xl font-semibold text-primaire">Autorité traditionnelle</h2>
           <div className="flex items-center gap-3">
             {village.chef_photo_url && (
-              <img src={village.chef_photo_url} alt="" className="h-16 w-16 rounded-full object-cover" />
+              <ZoomableImage src={village.chef_photo_url} alt="" className="h-16 w-16 rounded-full object-cover" />
             )}
             <div>
               <p className="font-semibold text-encre">{village.chef_nom}</p>
@@ -70,7 +71,7 @@ export default async function PageVillage({
           <div className="grid gap-4 sm:grid-cols-3">
             {village.village_chefferie_membres.map((m: any) => (
               <div key={m.id} className="rounded-lg border border-black/5 bg-white p-3 text-center shadow-sm">
-                {m.photo_url && <img src={m.photo_url} alt="" className="mx-auto mb-2 h-14 w-14 rounded-full object-cover" />}
+                {m.photo_url && <ZoomableImage src={m.photo_url} alt="" className="mx-auto mb-2 h-14 w-14 rounded-full object-cover" />}
                 <p className="font-medium text-encre">{m.nom}</p>
                 {m.fonction && <p className="text-xs text-primaire">{m.fonction}</p>}
                 {m.bio && <p className="mt-1 text-xs text-encre/60">{m.bio}</p>}

@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import ContenuFormatte from '@/components/contenu-formatte'
+import ZoomableImage from '@/components/zoomable-image'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,7 +33,7 @@ export default async function PageProjet({
               {m.type === 'video' ? (
                 <video src={m.url} controls className="h-40 w-full object-cover" />
               ) : (
-                <img src={m.url} alt="" className="h-40 w-full object-cover" />
+                <ZoomableImage src={m.url} alt="" className="h-40 w-full object-cover" />
               )}
             </div>
           ))}

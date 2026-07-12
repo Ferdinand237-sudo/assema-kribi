@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import ZoomableImage from '@/components/zoomable-image'
 
 export const dynamic = 'force-dynamic'
 
@@ -52,7 +53,7 @@ export default async function PageMessagerie() {
     .sort((a, b) => new Date(b.dernierMessage.created_at).getTime() - new Date(a.dernierMessage.created_at).getTime())
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-fond-casse">
+    <div className="min-h-[calc(100dvh-4rem)]">
       <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-10">
         <h1 className="mb-6 text-2xl font-semibold text-encre">Messagerie</h1>
 
@@ -68,7 +69,7 @@ export default async function PageMessagerie() {
               >
                 <div className="relative flex-shrink-0">
                   {c.profil?.avatar_url ? (
-                    <img src={c.profil.avatar_url} alt="" className="h-12 w-12 rounded-full object-cover" />
+                    <ZoomableImage src={c.profil.avatar_url} alt="" className="h-12 w-12 rounded-full object-cover" />
                   ) : (
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-fond-clair font-display text-lg text-primaire">
                       {c.profil?.first_name?.[0]}

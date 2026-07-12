@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import ContenuFormatte from '@/components/contenu-formatte'
 import Reveal from '@/components/reveal'
+import ZoomableImage from '@/components/zoomable-image'
 
 export const dynamic = 'force-dynamic'
 
@@ -49,7 +50,7 @@ export default async function PagePartenaires() {
             {annonces.map((a: any) => (
               <div key={a.id} className="flex gap-4 rounded-lg border border-black/5 bg-white p-4 shadow-sm">
                 {a.image_url && (
-                  <img src={a.image_url} alt="" className="h-20 w-20 flex-shrink-0 rounded-lg object-cover" />
+                  <ZoomableImage src={a.image_url} alt="" className="h-20 w-20 flex-shrink-0 rounded-lg object-cover" />
                 )}
                 <div>
                   <p className="font-mono text-xs uppercase tracking-wide text-primaire">{a.partenaires?.nom}</p>

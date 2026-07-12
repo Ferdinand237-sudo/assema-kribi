@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Reveal from '@/components/reveal'
+import ZoomableImage from '@/components/zoomable-image'
 
 export const dynamic = 'force-dynamic'
 
@@ -24,7 +25,7 @@ export default async function PageVillagesMabi() {
             return (
               <Reveal key={v.id} delayMs={i * 80}>
                 <a href={`/culture-mabi/villages/${v.id}`} className="carte-interactive block h-full overflow-hidden rounded-lg border border-black/5 bg-white shadow-sm">
-                  {photoCouverture && <img src={photoCouverture} alt="" className="h-32 w-full object-cover" />}
+                  {photoCouverture && <ZoomableImage src={photoCouverture} alt="" className="h-32 w-full object-cover" />}
                   <div className="p-3">
                     <h3 className="font-semibold text-encre">{v.nom}</h3>
                     {v.population_estimee && <p className="font-mono text-xs text-encre/60">~{v.population_estimee} habitants</p>}

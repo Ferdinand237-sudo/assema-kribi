@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Reveal from '@/components/reveal'
+import ZoomableImage from '@/components/zoomable-image'
 
 export default async function PageAccueil() {
   const supabase = await createClient()
@@ -146,7 +147,7 @@ export default async function PageAccueil() {
                 <Reveal key={t.id} delayMs={i * 80}>
                   <a href={`/membres/${t.id}`} className="carte-interactive block h-full rounded-lg border border-black/5 bg-white p-4 text-center shadow-sm">
                     {t.avatar_url && (
-                      <img src={t.avatar_url} alt="" className="mx-auto mb-2 h-14 w-14 rounded-full object-cover" />
+                      <ZoomableImage src={t.avatar_url} alt="" className="mx-auto mb-2 h-14 w-14 rounded-full object-cover" />
                     )}
                     <p className="font-medium text-encre">{t.first_name} {t.last_name}</p>
                     <p className="text-xs text-encre/60">{t.filiere}</p>

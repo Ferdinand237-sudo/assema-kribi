@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Reveal from '@/components/reveal'
+import ZoomableImage from '@/components/zoomable-image'
 
 export const dynamic = 'force-dynamic'
 
@@ -28,7 +29,7 @@ export default async function PageGalerie() {
                       {media.type === 'video' ? (
                         <video src={media.url} controls className="h-32 w-full object-cover" />
                       ) : (
-                        <img src={media.url} alt="" className="h-32 w-full object-cover" />
+                        <ZoomableImage src={media.url} alt="" className="h-32 w-full object-cover" />
                       )}
                     </div>
                   </Reveal>

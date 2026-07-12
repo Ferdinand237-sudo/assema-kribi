@@ -5,14 +5,14 @@
   --couleur-primaire-fonce: #1E7DBE;
   --couleur-fond-clair: #E8F3FB;
   --couleur-blanc: #FFFFFF;
-  --couleur-encre: #1A1F2E;
+  --couleur-encre: #16233F;
   --couleur-succes: #15803D;
   --couleur-erreur: #DC2626;
   --couleur-attente: #CA8A04;
-  /* Blanc cassé, très légèrement jaunâtre — à l'essai sur la messagerie avant généralisation éventuelle */
+  /* Blanc cassé, très légèrement jaunâtre — fond du site */
   --couleur-fond-casse: #FAF6EC;
 
-  --background: var(--couleur-blanc);
+  --background: var(--couleur-fond-casse);
   --foreground: var(--couleur-encre);
 }
 
@@ -24,7 +24,7 @@
   --color-primaire-fonce: #1E7DBE;
   --color-fond-clair: #E8F3FB;
   --color-blanc: #FFFFFF;
-  --color-encre: #1A1F2E;
+  --color-encre: #16233F;
   --color-succes: #15803D;
   --color-erreur: #DC2626;
   --color-attente: #CA8A04;
@@ -161,7 +161,7 @@ select:focus-visible,
   @media (hover: hover) {
     .carte-interactive:hover {
       transform: translateY(-4px);
-      box-shadow: 0 12px 24px -12px rgb(26 31 46 / 0.18);
+      box-shadow: 0 12px 24px -12px rgb(22 35 63 / 0.18);
     }
   }
 

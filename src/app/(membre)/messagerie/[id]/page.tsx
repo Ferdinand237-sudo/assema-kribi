@@ -56,7 +56,7 @@ export default async function PageConversation({
         </p>
       )}
 
-      <div className="flex-1 space-y-2 overflow-y-auto">
+      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto">
         {messages?.map((m) => (
           <div
             key={m.id}

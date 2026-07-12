@@ -1,4 +1,4 @@
-import DOMPurify from 'isomorphic-dompurify'
+import sanitizeHtml from 'sanitize-html'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -9,13 +9,13 @@ function estDuHtml(texte: string) {
 }
 
 const BALISES_AUTORISEES = ['p', 'br', 'strong', 'em', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'blockquote', 'a', 'hr']
-const ATTRIBUTS_AUTORISES = ['href', 'target', 'rel', 'style']
+const ATTRIBUTS_AUTORISES = { a: ['href', 'target', 'rel'], '*': ['style'] }
 
 export default function ContenuFormatte({ texte }: { texte: string }) {
   if (estDuHtml(texte)) {
-    const propre = DOMPurify.sanitize(texte, {
-      ALLOWED_TAGS: BALISES_AUTORISEES,
-      ALLOWED_ATTR: ATTRIBUTS_AUTORISES,
+    const propre = sanitizeHtml(texte, {
+      allowedTags: BALISES_AUTORISEES,
+      allowedAttributes: ATTRIBUTS_AUTORISES,
     })
     return <div className="contenu-riche" dangerouslySetInnerHTML={{ __html: propre }} />
   }

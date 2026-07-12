@@ -9,8 +9,8 @@ export default async function SiteFooter() {
 
   return (
     <footer className="mt-16 bg-encre text-white/80">
-      <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 sm:grid-cols-3">
-        <div>
+      <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 text-center sm:grid-cols-3 sm:text-left">
+        <div className="flex flex-col items-center sm:items-start">
           <a href="/" className="flex items-center gap-2">
             <img src="/logo-assema.jpeg" alt="ASSEMA Kribi" className="h-9 w-9 rounded-full object-cover" />
             <span className="font-display text-lg font-semibold text-white">ASSEMA</span>
@@ -21,9 +21,9 @@ export default async function SiteFooter() {
           </p>
         </div>
 
-        <div>
+        <div className="flex flex-col items-center sm:items-start">
           <p className="text-xs font-semibold uppercase tracking-wide text-white/40">Navigation</p>
-          <nav className="mt-3 flex flex-col gap-2 text-sm">
+          <nav className="mt-3 flex flex-col items-center gap-2 text-sm sm:items-start">
             <a href="/culture-mabi" className="transition-colors hover:text-primaire">Culture Mabi</a>
             <a href="/projets" className="transition-colors hover:text-primaire">Projets</a>
             <a href="/bureau-executif" className="transition-colors hover:text-primaire">Bureau exécutif</a>
@@ -33,9 +33,9 @@ export default async function SiteFooter() {
           </nav>
         </div>
 
-        <div>
+        <div className="flex flex-col items-center sm:items-start">
           <p className="text-xs font-semibold uppercase tracking-wide text-white/40">Contact</p>
-          <div className="mt-3 space-y-2 text-sm text-white/70">
+          <div className="mt-3 flex flex-col items-center gap-2 text-sm text-white/70 sm:items-start">
             {c.adresse && <p>{c.adresse}</p>}
             {c.reseaux_sociaux && <p>{c.reseaux_sociaux}</p>}
             <a href="/contact" className="inline-block font-medium text-primaire hover:underline">

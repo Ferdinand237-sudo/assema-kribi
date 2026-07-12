@@ -39,52 +39,67 @@ export default async function PageConversation({
     .order('created_at', { ascending: true })
 
   return (
-    <div className="mx-auto flex h-[calc(100vh-4rem)] max-w-2xl flex-col px-6 py-6">
-      <div className="mb-4 flex items-center gap-3 border-b border-black/10 pb-3">
-        {autreProfil.avatar_url && (
-          <img src={autreProfil.avatar_url} alt="" className="h-10 w-10 rounded-full object-cover" />
-        )}
-        <div>
-          <p className="font-semibold text-encre">{autreProfil.first_name} {autreProfil.last_name}</p>
-          <a href={`/membres/${autreId}`} className="text-xs text-primaire hover:underline">Voir le profil</a>
-        </div>
-      </div>
-
-      {erreur === 'refuse' && (
-        <p className="badge-erreur mb-3 block w-fit rounded-lg px-4 py-3 text-sm">
-          Ce membre n'accepte pas les messages privés pour le moment.
-        </p>
-      )}
-
-      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto">
-        {messages?.map((m) => (
-          <div
-            key={m.id}
-            className={`max-w-[70%] rounded-lg p-2 text-sm ${
-              m.sender_id === user.id ? 'ml-auto bg-primaire text-white' : 'bg-fond-clair text-encre'
-            }`}
-          >
-            {m.content}
+    <div className="flex h-[calc(100vh-4rem)] flex-col bg-fond-casse">
+      <div className="mx-auto flex w-full min-h-0 max-w-2xl flex-1 flex-col px-6 py-4">
+        <div className="mb-2 flex items-center gap-3 border-b border-black/10 pb-3">
+          {autreProfil.avatar_url && (
+            <img src={autreProfil.avatar_url} alt="" className="h-10 w-10 rounded-full object-cover" />
+          )}
+          <div>
+            <p className="font-semibold text-encre">{autreProfil.first_name} {autreProfil.last_name}</p>
+            <a href={`/membres/${autreId}`} className="text-xs text-primaire hover:underline">Voir le profil</a>
           </div>
-        ))}
-        {(!messages || messages.length === 0) && (
-          <p className="text-sm text-encre/60">Aucun message pour l'instant. Lance la conversation !</p>
+        </div>
+
+        {erreur === 'refuse' && (
+          <p className="badge-erreur mb-3 mt-3 block w-fit rounded-lg px-4 py-3 text-sm">
+            Ce membre n'accepte pas les messages privés pour le moment.
+          </p>
+        )}
+
+        <div className="min-h-0 flex-1 space-y-3 overflow-y-auto py-3">
+          {messages?.map((m) => {
+            const estMoi = m.sender_id === user.id
+            return (
+              <div key={m.id} className={`flex ${estMoi ? 'justify-end' : 'justify-start'}`}>
+                <div
+                  className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
+                    estMoi ? 'rounded-br-md bg-primaire text-white' : 'rounded-bl-md bg-white text-encre'
+                  }`}
+                >
+                  <p className="whitespace-pre-wrap break-words">{m.content}</p>
+                  <p className={`mt-1 text-right font-mono text-[10px] ${estMoi ? 'text-white/60' : 'text-encre/35'}`}>
+                    {new Date(m.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+              </div>
+            )
+          })}
+          {(!messages || messages.length === 0) && (
+            <p className="text-sm text-encre/60">Aucun message pour l'instant. Lance la conversation !</p>
+          )}
+        </div>
+
+        {autreProfil.allow_messages ? (
+          <form action={envoyerMessage} className="flex items-end gap-2 border-t border-black/10 pt-3">
+            <input type="hidden" name="receiverId" value={autreId} />
+            <textarea
+              name="content"
+              placeholder="Écris ton message... (retour à la ligne autorisé)"
+              required
+              rows={2}
+              className="champ max-h-32 flex-1 resize-none"
+            />
+            <button type="submit" className="bouton bouton-primaire">
+              Envoyer
+            </button>
+          </form>
+        ) : (
+          <p className="border-t border-black/10 pt-3 text-sm text-encre/60">
+            Ce membre n'accepte pas les messages privés.
+          </p>
         )}
       </div>
-
-      {autreProfil.allow_messages ? (
-        <form action={envoyerMessage} className="mt-3 flex gap-2 border-t border-black/10 pt-3">
-          <input type="hidden" name="receiverId" value={autreId} />
-          <input name="content" placeholder="Écris ton message..." required className="champ flex-1" />
-          <button type="submit" className="bouton bouton-primaire">
-            Envoyer
-          </button>
-        </form>
-      ) : (
-        <p className="mt-3 border-t border-black/10 pt-3 text-sm text-encre/60">
-          Ce membre n'accepte pas les messages privés.
-        </p>
-      )}
     </div>
   )
 }

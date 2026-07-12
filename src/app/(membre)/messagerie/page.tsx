@@ -3,6 +3,18 @@ import { redirect } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
 
+function formaterDateConversation(date: string) {
+  const d = new Date(date)
+  const maintenant = new Date()
+  if (d.toDateString() === maintenant.toDateString()) {
+    return d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+  }
+  const hier = new Date(maintenant)
+  hier.setDate(hier.getDate() - 1)
+  if (d.toDateString() === hier.toDateString()) return 'Hier'
+  return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
+}
+
 export default async function PageMessagerie() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -40,33 +52,54 @@ export default async function PageMessagerie() {
     .sort((a, b) => new Date(b.dernierMessage.created_at).getTime() - new Date(a.dernierMessage.created_at).getTime())
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-10">
-      <h1 className="mb-6 text-2xl font-semibold text-encre">Messagerie</h1>
+    <div className="min-h-[calc(100vh-4rem)] bg-fond-casse">
+      <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-10">
+        <h1 className="mb-6 text-2xl font-semibold text-encre">Messagerie</h1>
 
-      {conversations.length > 0 ? (
-        <div className="space-y-2">
-          {conversations.map((c) => (
-            <a key={c.id} href={`/messagerie/${c.id}`} className="flex items-center gap-3 rounded-lg border border-black/10 p-3 transition-colors hover:bg-fond-clair">
-              {c.profil?.avatar_url && (
-                <img src={c.profil.avatar_url} alt="" className="h-10 w-10 rounded-full object-cover" />
-              )}
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <p className="font-medium text-encre">{c.profil?.first_name} {c.profil?.last_name}</p>
+        {conversations.length > 0 ? (
+          <div className="space-y-2">
+            {conversations.map((c) => (
+              <a
+                key={c.id}
+                href={`/messagerie/${c.id}`}
+                className={`carte-interactive flex items-center gap-3 rounded-xl border p-3 sm:p-4 ${
+                  c.nonLus > 0 ? 'border-primaire/25 bg-white' : 'border-black/5 bg-white/70'
+                }`}
+              >
+                <div className="relative flex-shrink-0">
+                  {c.profil?.avatar_url ? (
+                    <img src={c.profil.avatar_url} alt="" className="h-12 w-12 rounded-full object-cover" />
+                  ) : (
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-fond-clair font-display text-lg text-primaire">
+                      {c.profil?.first_name?.[0]}
+                    </div>
+                  )}
                   {c.nonLus > 0 && (
-                    <span className="pastille-vivante rounded-full bg-primaire px-2 py-0.5 text-xs text-white">{c.nonLus}</span>
+                    <span className="pastille-vivante absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primaire px-1 text-[11px] font-medium text-white ring-2 ring-white">
+                      {c.nonLus}
+                    </span>
                   )}
                 </div>
-                <p className="truncate text-sm text-encre/60">{c.dernierMessage.content}</p>
-              </div>
-            </a>
-          ))}
-        </div>
-      ) : (
-        <p className="text-sm text-encre/60">
-          Aucune conversation pour le moment. Va sur le profil d'un membre pour lui envoyer un message.
-        </p>
-      )}
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <p className="truncate font-medium text-encre">{c.profil?.first_name} {c.profil?.last_name}</p>
+                    <span className="flex-shrink-0 font-mono text-[11px] text-encre/40">
+                      {formaterDateConversation(c.dernierMessage.created_at)}
+                    </span>
+                  </div>
+                  <p className={`truncate text-sm ${c.nonLus > 0 ? 'font-medium text-encre/85' : 'text-encre/55'}`}>
+                    {c.dernierMessage.content}
+                  </p>
+                </div>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-encre/60">
+            Aucune conversation pour le moment. Va sur le profil d'un membre pour lui envoyer un message.
+          </p>
+        )}
+      </div>
     </div>
   )
 }

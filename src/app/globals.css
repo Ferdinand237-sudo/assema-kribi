@@ -9,6 +9,8 @@
   --couleur-succes: #15803D;
   --couleur-erreur: #DC2626;
   --couleur-attente: #CA8A04;
+  /* Blanc cassé, très légèrement jaunâtre — à l'essai sur la messagerie avant généralisation éventuelle */
+  --couleur-fond-casse: #FAF6EC;
 
   --background: var(--couleur-blanc);
   --foreground: var(--couleur-encre);
@@ -26,6 +28,7 @@
   --color-succes: #15803D;
   --color-erreur: #DC2626;
   --color-attente: #CA8A04;
+  --color-fond-casse: #FAF6EC;
 
   --font-display: var(--font-fraunces);
   --font-sans: var(--font-work-sans);

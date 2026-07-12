@@ -180,12 +180,12 @@ select:focus-visible,
   .cadre::before {
     content: '';
     position: absolute;
-    left: 22px;
-    right: 22px;
-    top: 0;
-    height: 3px;
-    border-radius: 0 0 3px 3px;
-    background: linear-gradient(90deg, var(--couleur-primaire), var(--couleur-primaire-fonce));
+    top: 18px;
+    bottom: 18px;
+    left: 0;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: linear-gradient(180deg, var(--couleur-primaire), var(--couleur-primaire-fonce));
     opacity: 0.55;
   }
 

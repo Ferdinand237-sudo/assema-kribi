@@ -10,10 +10,12 @@ export default async function PageAccueil() {
     { data: articles },
     { data: communiques },
     { data: talentsEpingles },
+    { data: annoncesPartenaires },
+    { data: albumsRecents },
   ] = await Promise.all([
     supabase
       .from('projets')
-      .select('id, titre, description, created_at')
+      .select('id, titre, description, created_at, projet_medias(url)')
       .order('created_at', { ascending: false })
       .limit(3),
     supabase
@@ -33,7 +35,21 @@ export default async function PageAccueil() {
       .select('ordre, profiles!talents_mis_en_avant_profile_id_fkey(id, first_name, last_name, filiere, avatar_url)')
       .order('ordre')
       .limit(4),
+    supabase
+      .from('annonces_partenaires')
+      .select('id, title, content, image_url, created_at, partenaires(nom)')
+      .eq('status', 'published')
+      .order('created_at', { ascending: false })
+      .limit(3),
+    supabase
+      .from('galerie_albums')
+      .select('id, nom, galerie_medias(id, url, type)')
+      .order('created_at', { ascending: false })
+      .limit(1),
   ])
+
+  const dernierAlbum = albumsRecents?.[0] ?? null
+  const mediasRecents = (dernierAlbum?.galerie_medias ?? []).slice(0, 6)
 
   // Complète avec des talents automatiques si moins de 4 épinglés
   const idsEpingles = new Set((talentsEpingles ?? []).map((t: any) => t.profiles?.id))
@@ -54,6 +70,7 @@ export default async function PageAccueil() {
   const actualites = [
     ...(articles ?? []).map((a) => ({
       id: `article-${a.id}`,
+      href: `/articles/${a.id}`,
       titre: a.title,
       extrait: a.content.slice(0, 140),
       date: a.published_at,
@@ -61,6 +78,7 @@ export default async function PageAccueil() {
     })),
     ...(communiques ?? []).map((c) => ({
       id: `communique-${c.id}`,
+      href: `/communiques/${c.id}`,
       titre: c.title,
       extrait: c.content.slice(0, 140),
       date: c.created_at,
@@ -101,14 +119,20 @@ export default async function PageAccueil() {
           <h2 className="mb-6 font-display text-2xl font-semibold text-encre">Projets réalisés</h2>
           {projets && projets.length > 0 ? (
             <div className="grid gap-4 sm:grid-cols-3">
-              {projets.map((p, i) => (
-                <Reveal key={p.id} delayMs={i * 80}>
-                  <a href={`/projets/${p.id}`} className="carte-interactive block h-full rounded-lg border border-black/5 bg-white p-4 shadow-sm">
-                    <h3 className="font-semibold text-encre">{p.titre}</h3>
-                    <p className="mt-1 text-sm text-encre/70">{p.description?.slice(0, 100)}</p>
-                  </a>
-                </Reveal>
-              ))}
+              {projets.map((p: any, i) => {
+                const couverture = p.projet_medias?.[0]?.url
+                return (
+                  <Reveal key={p.id} delayMs={i * 80}>
+                    <a href={`/projets/${p.id}`} className="carte-interactive block h-full overflow-hidden border border-black/5 bg-white shadow-sm">
+                      {couverture && <ZoomableImage src={couverture} alt="" className="h-32 w-full object-cover" />}
+                      <div className="p-4">
+                        <h3 className="font-semibold text-encre">{p.titre}</h3>
+                        <p className="mt-1 text-sm text-encre/70">{p.description?.slice(0, 100)}</p>
+                      </div>
+                    </a>
+                  </Reveal>
+                )
+              })}
             </div>
           ) : (
             <p className="text-sm text-encre/60">Aucun projet publié pour le moment. Revenez bientôt !</p>
@@ -125,11 +149,12 @@ export default async function PageAccueil() {
           <div className="space-y-4">
             {actualites.map((a, i) => (
               <Reveal key={a.id} delayMs={i * 80}>
-                <div className="cadre border border-black/5 bg-white p-4 pt-5 shadow-sm">
+                <a href={a.href} className="carte-interactive block border border-black/5 bg-white p-4 pt-5 shadow-sm">
                   <p className="font-mono text-xs font-medium uppercase tracking-wide text-primaire">{a.source}</p>
                   <h3 className="font-semibold text-encre">{a.titre}</h3>
                   <p className="mt-1 text-sm text-encre/70">{a.extrait}...</p>
-                </div>
+                  <p className="mt-2 text-xs font-medium text-primaire">Lire l'article →</p>
+                </a>
               </Reveal>
             ))}
           </div>
@@ -160,6 +185,55 @@ export default async function PageAccueil() {
           )}
         </div>
       </section>
+
+      {annoncesPartenaires && annoncesPartenaires.length > 0 && (
+        <section className="px-6 py-12">
+          <div className="mx-auto max-w-5xl">
+            <h2 className="mb-6 font-display text-2xl font-semibold text-encre">Actualités de nos partenaires</h2>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {annoncesPartenaires.map((an: any, i: number) => (
+                <Reveal key={an.id} delayMs={i * 80}>
+                  <a href={`/partenaires/annonces/${an.id}`} className="carte-interactive block h-full overflow-hidden border border-black/5 bg-white shadow-sm">
+                    {an.image_url && <ZoomableImage src={an.image_url} alt="" className="h-32 w-full object-cover" />}
+                    <div className="p-4">
+                      <p className="font-mono text-xs uppercase tracking-wide text-primaire">{an.partenaires?.nom}</p>
+                      <h3 className="font-semibold text-encre">{an.title}</h3>
+                      <p className="mt-1 line-clamp-2 text-sm text-encre/70">{an.content}</p>
+                      <p className="mt-2 text-xs font-medium text-primaire">Lire l'article →</p>
+                    </div>
+                  </a>
+                </Reveal>
+              ))}
+            </div>
+            <div className="mt-4 text-center">
+              <a href="/partenaires" className="text-sm font-medium text-primaire hover:underline">Voir tous nos partenaires →</a>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {dernierAlbum && mediasRecents.length > 0 && (
+        <section className="bg-fond-clair px-6 py-12">
+          <div className="mx-auto max-w-5xl">
+            <h2 className="mb-1 font-display text-2xl font-semibold text-encre">Activités récentes</h2>
+            <p className="mb-6 text-sm text-encre/60">Quelques images de « {dernierAlbum.nom} », notre dernier souvenir en date.</p>
+            <a href={`/galerie/${dernierAlbum.id}`} className="grid grid-cols-3 gap-3 sm:grid-cols-6">
+              {mediasRecents.map((m: any) => (
+                <div key={m.id} className="carte-interactive block aspect-square overflow-hidden border border-black/5">
+                  {m.type === 'video' ? (
+                    <video src={m.url} className="h-full w-full object-cover" />
+                  ) : (
+                    <img src={m.url} alt="" className="h-full w-full object-cover" />
+                  )}
+                </div>
+              ))}
+            </a>
+            <div className="mt-4 text-center">
+              <a href="/galerie" className="text-sm font-medium text-primaire hover:underline">Voir toute la galerie →</a>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   )
 }

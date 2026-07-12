@@ -61,7 +61,7 @@ export default function MenuMobile({
                   <span className={`text-encre/40 transition-transform ${sousMenuOuvert === 'informations' ? 'rotate-180' : ''}`}>▾</span>
                 </button>
                 {sousMenuOuvert === 'informations' && (
-                  <div className="pl-2">
+                  <div className="flex flex-col pl-2">
                     {liensInformations.map((l) => (
                       <a key={l.href} href={l.href} onClick={() => setOuvert(false)} className="flex items-center justify-between rounded px-3 py-2 text-encre/85 hover:bg-fond-clair hover:text-primaire">
                         {l.label}
@@ -84,7 +84,7 @@ export default function MenuMobile({
                   <span className={`text-encre/40 transition-transform ${sousMenuOuvert === 'gestion' ? 'rotate-180' : ''}`}>▾</span>
                 </button>
                 {sousMenuOuvert === 'gestion' && (
-                  <div className="pl-2">
+                  <div className="flex flex-col pl-2">
                     {liensGestion.map((l) => (
                       <a key={l.href} href={l.href} onClick={() => setOuvert(false)} className="rounded px-3 py-2 text-encre/85 hover:bg-fond-clair hover:text-primaire">
                         {l.label}

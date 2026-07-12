@@ -1,5 +1,4 @@
 import { createClient } from '@/lib/supabase/server'
-import ContenuFormatte from '@/components/contenu-formatte'
 import Reveal from '@/components/reveal'
 import ZoomableImage from '@/components/zoomable-image'
 
@@ -48,16 +47,21 @@ export default async function PagePartenaires() {
           <h2 className="mb-4 font-display text-xl font-semibold text-encre">Actualités de nos partenaires</h2>
           <div className="space-y-4">
             {annonces.map((a: any) => (
-              <div key={a.id} className="flex gap-4 rounded-lg border border-black/5 bg-white p-4 shadow-sm">
+              <a
+                key={a.id}
+                href={`/partenaires/annonces/${a.id}`}
+                className="carte-interactive flex gap-4 border border-black/5 bg-white p-4 shadow-sm"
+              >
                 {a.image_url && (
                   <ZoomableImage src={a.image_url} alt="" className="h-20 w-20 flex-shrink-0 rounded-lg object-cover" />
                 )}
-                <div>
+                <div className="min-w-0">
                   <p className="font-mono text-xs uppercase tracking-wide text-primaire">{a.partenaires?.nom}</p>
                   <h3 className="font-semibold text-encre">{a.title}</h3>
-                  <ContenuFormatte texte={a.content} />
+                  <p className="mt-1 line-clamp-2 text-sm text-encre/70">{a.content}</p>
+                  <p className="mt-2 text-xs font-medium text-primaire">Lire l'article →</p>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </section>

@@ -1,5 +1,4 @@
 import { createClient } from '@/lib/supabase/server'
-import ContenuFormatte from '@/components/contenu-formatte'
 import Reveal from '@/components/reveal'
 import ZoomableImage from '@/components/zoomable-image'
 
@@ -28,8 +27,8 @@ export default async function PageFiguresMabi() {
         <div className="grid gap-6 sm:grid-cols-2">
           {figures.map((f, i) => (
             <Reveal key={f.id} delayMs={i * 80}>
-              <div className="h-full rounded-lg border border-black/5 bg-white p-4 shadow-sm">
-                <div className="mb-3 flex items-center gap-3">
+              <a href={`/culture-mabi/figures/${f.id}`} className="carte-interactive block h-full border border-black/5 bg-white p-4 shadow-sm">
+                <div className="flex items-center gap-3">
                   {f.photo_url && <ZoomableImage src={f.photo_url} alt="" className="h-16 w-16 rounded-full object-cover" />}
                   <div>
                     <p className="font-semibold text-encre">{f.nom}</p>
@@ -48,8 +47,9 @@ export default async function PageFiguresMabi() {
                     )}
                   </div>
                 </div>
-                {f.biographie && <ContenuFormatte texte={f.biographie} />}
-              </div>
+                {f.biographie && <p className="mt-3 line-clamp-2 text-sm text-encre/70">{f.biographie}</p>}
+                <p className="mt-2 text-xs font-medium text-primaire">Voir la biographie →</p>
+              </a>
             </Reveal>
           ))}
         </div>

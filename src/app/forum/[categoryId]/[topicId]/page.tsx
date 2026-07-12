@@ -23,13 +23,17 @@ export default async function PageSujet({
 
   if (!sujet) notFound()
 
-  const { data: messages } = await supabase
+  const { data: messages, error: erreurMessages } = await supabase
     .from('forum_posts')
     .select(
-      'id, content, created_at, author_id, profiles(first_name, last_name, avatar_url), message_cite:forum_posts!forum_posts_reply_to_id_fkey(id, content, profiles(first_name, last_name))'
+      'id, content, created_at, author_id, profiles(first_name, last_name, avatar_url), message_cite:forum_posts!reply_to_id(id, content, profiles(first_name, last_name))'
     )
     .eq('topic_id', topicId)
     .order('created_at', { ascending: true })
+
+  if (erreurMessages) {
+    console.error('Erreur chargement messages du forum :', erreurMessages)
+  }
 
   return (
     <div className="min-h-[calc(100dvh-4rem)]">

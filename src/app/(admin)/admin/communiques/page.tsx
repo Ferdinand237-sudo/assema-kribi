@@ -1,7 +1,8 @@
 import { requireAdminOuPresident } from '@/lib/auth/guards'
-import { creerCommunique } from './actions'
+import { creerCommunique, supprimerCommunique } from './actions'
 import EditeurFormatte from '@/components/editeur-formatte'
 import BoutonEnvoi from '@/components/bouton-envoi'
+import BoutonConfirmation from '@/components/bouton-confirmation'
 
 export const dynamic = 'force-dynamic'
 
@@ -101,6 +102,15 @@ export default async function PageAdminCommuniques() {
                 {c.lieu_evenement && `📍 ${c.lieu_evenement}`}
               </p>
             )}
+            <div className="mt-2 flex gap-3 border-t border-black/5 pt-2">
+              <a href={`/admin/communiques/${c.id}`} className="text-xs font-medium text-primaire hover:underline">Modifier</a>
+              <form action={supprimerCommunique}>
+                <input type="hidden" name="communiqueId" value={c.id} />
+                <BoutonConfirmation message="Supprimer définitivement ce communiqué ?" className="text-xs font-medium text-erreur hover:underline">
+                  Supprimer
+                </BoutonConfirmation>
+              </form>
+            </div>
           </div>
         ))}
         {(!communiques || communiques.length === 0) && (

@@ -8,6 +8,7 @@ import {
   supprimerMembreChefferie,
 } from './actions'
 import EditeurFormatte from '@/components/editeur-formatte'
+import BoutonConfirmation from '@/components/bouton-confirmation'
 
 export const dynamic = 'force-dynamic'
 
@@ -54,10 +55,15 @@ export default async function PageGestionVillages() {
                   </p>
                 </div>
               </div>
-              <form action={supprimerVillage}>
-                <input type="hidden" name="id" value={v.id} />
-                <button type="submit" className="text-xs text-erreur hover:underline">Supprimer le village</button>
-              </form>
+              <div className="flex gap-3">
+                <a href={`/gestion/villages-mabi/${v.id}`} className="text-xs font-medium text-primaire hover:underline">Modifier</a>
+                <form action={supprimerVillage}>
+                  <input type="hidden" name="id" value={v.id} />
+                  <BoutonConfirmation message={`Supprimer définitivement le village "${v.nom}" et son contenu associé ?`} className="text-xs text-erreur hover:underline">
+                    Supprimer le village
+                  </BoutonConfirmation>
+                </form>
+              </div>
             </div>
 
             {/* Photos du village */}

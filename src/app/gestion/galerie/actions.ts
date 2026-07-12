@@ -13,6 +13,18 @@ export async function creerAlbum(formData: FormData) {
   revalidatePath('/gestion/galerie')
 }
 
+export async function modifierAlbum(formData: FormData) {
+  const { supabase } = await requireModuleManager('galerie')
+  const id = formData.get('id') as string
+  const nom = formData.get('nom') as string
+  const description = formData.get('description') as string
+
+  await supabase.from('galerie_albums').update({ nom, description }).eq('id', id)
+  revalidatePath('/gestion/galerie')
+  revalidatePath('/galerie')
+  revalidatePath(`/galerie/${id}`)
+}
+
 export async function supprimerAlbum(formData: FormData) {
   const { supabase } = await requireModuleManager('galerie')
   const id = formData.get('id') as string

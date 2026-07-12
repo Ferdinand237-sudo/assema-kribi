@@ -1,7 +1,16 @@
 import { requireAdminOuPresident } from '@/lib/auth/guards'
-import { creerCommission, ajouterMembreCommission, retirerMembreCommission } from './actions'
+import { creerCommission, modifierCommission, supprimerCommission, ajouterMembreCommission, retirerMembreCommission } from './actions'
+import BoutonConfirmation from '@/components/bouton-confirmation'
+import BoutonEnvoi from '@/components/bouton-envoi'
 
-export default async function PageAdminCommissions() {
+export const dynamic = 'force-dynamic'
+
+export default async function PageAdminCommissions({
+  searchParams,
+}: {
+  searchParams: Promise<{ erreur?: string }>
+}) {
+  const { erreur } = await searchParams
   const { supabase } = await requireAdminOuPresident()
 
   const [{ data: commissions }, { data: profiles }] = await Promise.all([
@@ -16,6 +25,8 @@ export default async function PageAdminCommissions() {
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-10">
       <h1 className="mb-6 font-display text-2xl font-semibold text-encre sm:text-3xl">Gestion des commissions</h1>
 
+      {erreur && <p className="confirmation-douce badge-erreur mb-4 block w-fit rounded-lg px-4 py-3 text-sm">{erreur}</p>}
+
       <form action={creerCommission} className="cadre mb-8 space-y-3 border border-black/10 bg-white p-4 pt-5 shadow-sm">
         <h2 className="font-semibold text-encre">Créer une commission</h2>
         <input name="nom" placeholder="Nom de la commission" required className="champ" />
@@ -28,8 +39,26 @@ export default async function PageAdminCommissions() {
       <div className="space-y-6">
         {commissions?.map((c) => (
           <div key={c.id} className="cadre border border-black/5 bg-white p-4 pt-5 shadow-sm">
-            <h3 className="font-semibold text-encre">{c.nom}</h3>
-            <p className="mb-3 text-sm text-encre/60">{c.description}</p>
+            <div className="mb-1 flex items-start justify-between gap-2">
+              <h3 className="font-semibold text-encre">{c.nom}</h3>
+              <form action={supprimerCommission}>
+                <input type="hidden" name="id" value={c.id} />
+                <BoutonConfirmation message={`Supprimer la commission "${c.nom}" ?`} className="flex-shrink-0 text-xs text-erreur hover:underline">
+                  Supprimer
+                </BoutonConfirmation>
+              </form>
+            </div>
+            <p className="mb-2 text-sm text-encre/60">{c.description}</p>
+
+            <details className="mb-3">
+              <summary className="cursor-pointer text-xs font-medium text-primaire hover:underline">Modifier le nom / la description</summary>
+              <form action={modifierCommission} className="mt-2 space-y-2">
+                <input type="hidden" name="id" value={c.id} />
+                <input name="nom" defaultValue={c.nom} required className="champ !py-1.5 text-sm" />
+                <textarea name="description" defaultValue={c.description ?? ''} rows={2} className="champ !py-1.5 text-sm" />
+                <BoutonEnvoi className="bouton bouton-secondaire !py-1.5 text-xs" texteEnvoi="Enregistrement...">Enregistrer</BoutonEnvoi>
+              </form>
+            </details>
 
             <ul className="mb-3 space-y-1 text-sm">
               {(c.commission_members ?? []).map((m: any) => (

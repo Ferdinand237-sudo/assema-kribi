@@ -7,6 +7,7 @@ import {
   supprimerAnnonce,
 } from './actions'
 import EditeurFormatte from '@/components/editeur-formatte'
+import BoutonConfirmation from '@/components/bouton-confirmation'
 
 export const dynamic = 'force-dynamic'
 
@@ -47,10 +48,15 @@ export default async function PageGestionPartenaires() {
                   {p.description && <p className="text-xs text-encre/60">{p.description}</p>}
                 </div>
               </div>
-              <form action={supprimerPartenaire}>
-                <input type="hidden" name="id" value={p.id} />
-                <button type="submit" className="text-xs text-erreur hover:underline">Supprimer</button>
-              </form>
+              <div className="flex gap-3">
+                <a href={`/gestion/partenaires/${p.id}`} className="text-xs font-medium text-primaire hover:underline">Modifier</a>
+                <form action={supprimerPartenaire}>
+                  <input type="hidden" name="id" value={p.id} />
+                  <BoutonConfirmation message={`Supprimer définitivement le partenaire "${p.nom}" et ses annonces ?`} className="text-xs text-erreur hover:underline">
+                    Supprimer
+                  </BoutonConfirmation>
+                </form>
+              </div>
             </div>
 
             {/* Annonces de ce partenaire */}
@@ -64,7 +70,10 @@ export default async function PageGestionPartenaires() {
                       {a.status === 'published' ? 'Publiée' : 'Brouillon'}
                     </span>
                   </span>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
+                    <a href={`/gestion/partenaires/annonces/${a.id}`} className="text-xs font-medium text-primaire hover:underline">
+                      Modifier
+                    </a>
                     <form action={togglePublicationAnnonce}>
                       <input type="hidden" name="id" value={a.id} />
                       <input type="hidden" name="nouveauStatut" value={a.status === 'published' ? 'draft' : 'published'} />
@@ -74,7 +83,9 @@ export default async function PageGestionPartenaires() {
                     </form>
                     <form action={supprimerAnnonce}>
                       <input type="hidden" name="id" value={a.id} />
-                      <button type="submit" className="text-xs text-erreur hover:underline">Supprimer</button>
+                      <BoutonConfirmation message={`Supprimer définitivement l'annonce "${a.title}" ?`} className="text-xs text-erreur hover:underline">
+                        Supprimer
+                      </BoutonConfirmation>
                     </form>
                   </div>
                 </div>

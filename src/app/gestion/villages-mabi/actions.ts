@@ -2,6 +2,7 @@
 
 import { requireModuleManager } from '@/lib/auth/guards'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 export async function creerVillage(formData: FormData) {
   const { supabase, profile } = await requireModuleManager('culture_villages')
@@ -48,6 +49,49 @@ export async function creerVillage(formData: FormData) {
 
   revalidatePath('/gestion/villages-mabi')
   revalidatePath('/culture-mabi/villages')
+}
+
+export async function modifierVillage(formData: FormData) {
+  const { supabase } = await requireModuleManager('culture_villages')
+
+  const id = formData.get('id') as string
+  const nom = formData.get('nom') as string
+  const description = formData.get('description') as string
+  const histoire = formData.get('histoire') as string
+  const populationEstimee = formData.get('populationEstimee') as string
+  const chefNom = formData.get('chefNom') as string
+  const chefBio = formData.get('chefBio') as string
+  const chefPhoto = formData.get('chefPhoto') as File
+
+  await supabase
+    .from('villages_mabi')
+    .update({
+      nom,
+      description,
+      histoire,
+      population_estimee: populationEstimee ? parseInt(populationEstimee, 10) : null,
+      chef_nom: chefNom || null,
+      chef_bio: chefBio || null,
+    })
+    .eq('id', id)
+
+  if (chefPhoto && chefPhoto.size > 0) {
+    const extension = chefPhoto.name.split('.').pop()
+    const chemin = `villages/${id}/chef.${extension}`
+    const { error: erreurUpload } = await supabase.storage
+      .from('culture-mabi-media')
+      .upload(chemin, chefPhoto, { upsert: true, contentType: chefPhoto.type })
+
+    if (!erreurUpload) {
+      const { data: url } = supabase.storage.from('culture-mabi-media').getPublicUrl(chemin)
+      await supabase.from('villages_mabi').update({ chef_photo_url: url.publicUrl }).eq('id', id)
+    }
+  }
+
+  revalidatePath('/gestion/villages-mabi')
+  revalidatePath('/culture-mabi/villages')
+  revalidatePath(`/culture-mabi/villages/${id}`)
+  redirect('/gestion/villages-mabi')
 }
 
 export async function supprimerVillage(formData: FormData) {

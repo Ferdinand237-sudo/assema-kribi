@@ -1,6 +1,7 @@
 import { requireModuleManager } from '@/lib/auth/guards'
 import { creerProjet, ajouterMediasProjet, supprimerMediaProjet, supprimerProjet } from './actions'
 import EditeurFormatte from '@/components/editeur-formatte'
+import BoutonConfirmation from '@/components/bouton-confirmation'
 
 export const dynamic = 'force-dynamic'
 
@@ -35,10 +36,15 @@ export default async function PageGestionProjets() {
           <div key={p.id} className="cadre border border-black/5 bg-white p-4 pt-5 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
               <h3 className="font-semibold text-encre">{p.titre}</h3>
-              <form action={supprimerProjet}>
-                <input type="hidden" name="id" value={p.id} />
-                <button type="submit" className="text-xs text-erreur hover:underline">Supprimer</button>
-              </form>
+              <div className="flex gap-3">
+                <a href={`/gestion/projets/${p.id}`} className="text-xs font-medium text-primaire hover:underline">Modifier</a>
+                <form action={supprimerProjet}>
+                  <input type="hidden" name="id" value={p.id} />
+                  <BoutonConfirmation message={`Supprimer définitivement le projet "${p.titre}" ?`} className="text-xs text-erreur hover:underline">
+                    Supprimer
+                  </BoutonConfirmation>
+                </form>
+              </div>
             </div>
             {p.description && <p className="mb-1 text-sm text-encre/70">{p.description}</p>}
             {p.resultats && <p className="mb-3 text-xs text-encre/60">Résultats : {p.resultats}</p>}

@@ -1,5 +1,7 @@
 import { requireModuleManager } from '@/lib/auth/guards'
-import { creerAlbum, supprimerAlbum, ajouterMedias, supprimerMedia } from './actions'
+import { creerAlbum, modifierAlbum, supprimerAlbum, ajouterMedias, supprimerMedia } from './actions'
+import BoutonConfirmation from '@/components/bouton-confirmation'
+import BoutonEnvoi from '@/components/bouton-envoi'
 
 export const dynamic = 'force-dynamic'
 
@@ -34,11 +36,21 @@ export default async function PageGestionGalerie() {
               </div>
               <form action={supprimerAlbum}>
                 <input type="hidden" name="id" value={album.id} />
-                <button type="submit" className="text-xs text-erreur hover:underline">
+                <BoutonConfirmation message={`Supprimer définitivement l'album "${album.nom}" et tous ses médias ?`} className="text-xs text-erreur hover:underline">
                   Supprimer l'album
-                </button>
+                </BoutonConfirmation>
               </form>
             </div>
+
+            <details className="mb-3">
+              <summary className="cursor-pointer text-xs font-medium text-primaire hover:underline">Modifier le nom / la description</summary>
+              <form action={modifierAlbum} className="mt-2 space-y-2">
+                <input type="hidden" name="id" value={album.id} />
+                <input name="nom" defaultValue={album.nom} required className="champ !py-1.5 text-sm" />
+                <textarea name="description" defaultValue={album.description ?? ''} rows={2} className="champ !py-1.5 text-sm" />
+                <BoutonEnvoi className="bouton bouton-secondaire !py-1.5 text-xs" texteEnvoi="Enregistrement...">Enregistrer</BoutonEnvoi>
+              </form>
+            </details>
 
             {(album.galerie_medias ?? []).length > 0 && (
               <div className="mb-3 grid grid-cols-3 gap-2 sm:grid-cols-5">

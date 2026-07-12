@@ -1,6 +1,7 @@
 import { requireModuleManager } from '@/lib/auth/guards'
 import { creerFigure, supprimerFigure } from './actions'
 import EditeurFormatte from '@/components/editeur-formatte'
+import BoutonConfirmation from '@/components/bouton-confirmation'
 
 export const dynamic = 'force-dynamic'
 
@@ -57,10 +58,15 @@ export default async function PageGestionFigures() {
                 </p>
               </div>
             </div>
-            <form action={supprimerFigure}>
-              <input type="hidden" name="id" value={f.id} />
-              <button type="submit" className="text-xs text-erreur hover:underline">Supprimer</button>
-            </form>
+            <div className="flex gap-3">
+              <a href={`/gestion/figures-mabi/${f.id}`} className="text-xs font-medium text-primaire hover:underline">Modifier</a>
+              <form action={supprimerFigure}>
+                <input type="hidden" name="id" value={f.id} />
+                <BoutonConfirmation message={`Supprimer définitivement "${f.nom}" ?`} className="text-xs text-erreur hover:underline">
+                  Supprimer
+                </BoutonConfirmation>
+              </form>
+            </div>
           </div>
         ))}
         {(!figures || figures.length === 0) && (

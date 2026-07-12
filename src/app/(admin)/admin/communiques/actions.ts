@@ -2,6 +2,7 @@
 
 import { requireAdminOuPresident } from '@/lib/auth/guards'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 async function calculerDestinataires(
   supabase: any,
@@ -78,6 +79,73 @@ export async function creerCommunique(formData: FormData) {
       await supabase.from('communique_destinataires').insert(lignes)
     }
   }
+
+  revalidatePath('/admin/communiques')
+  revalidatePath('/communiques')
+  revalidatePath('/')
+}
+
+export async function modifierCommunique(formData: FormData) {
+  const { supabase } = await requireAdminOuPresident()
+
+  const communiqueId = formData.get('communiqueId') as string
+  const title = formData.get('title') as string
+  const content = formData.get('content') as string
+  const dateEvenement = (formData.get('date_evenement') as string) || null
+  const lieuEvenement = (formData.get('lieu_evenement') as string) || null
+  const canalPublic = formData.get('canal_public') === 'on'
+  const canalBureau = formData.get('canal_bureau') === 'on'
+  const canalCommissionId = (formData.get('canal_commission_id') as string) || null
+  const canalGroupeCible = formData.get('canal_groupe_cible') === 'on'
+
+  const critereNiveau = (formData.get('critere_niveau') as string) || null
+  const critereFiliere = (formData.get('critere_filiere') as string) || null
+  const critereCommissionId = (formData.get('critere_commission_id') as string) || null
+
+  const criteres = canalGroupeCible
+    ? { niveau_etude: critereNiveau, filiere: critereFiliere, commission_id: critereCommissionId }
+    : null
+
+  await supabase
+    .from('communiques')
+    .update({
+      title,
+      content,
+      date_evenement: dateEvenement,
+      lieu_evenement: lieuEvenement,
+      canal_public: canalPublic,
+      canal_bureau: canalBureau,
+      canal_commission_id: canalCommissionId,
+      canal_groupe_cible: canalGroupeCible,
+      criteres_ciblage: criteres,
+    })
+    .eq('id', communiqueId)
+
+  // Le ciblage du groupe (messagerie) est recalculé à chaque modification pour rester cohérent avec les nouveaux critères.
+  await supabase.from('communique_destinataires').delete().eq('communique_id', communiqueId)
+
+  if (canalGroupeCible) {
+    const profilIds = await calculerDestinataires(supabase, critereNiveau, critereFiliere, critereCommissionId)
+
+    if (profilIds.length > 0) {
+      const lignes = profilIds.map((profile_id) => ({ communique_id: communiqueId, profile_id }))
+      await supabase.from('communique_destinataires').insert(lignes)
+    }
+  }
+
+  revalidatePath('/admin/communiques')
+  revalidatePath('/communiques')
+  revalidatePath(`/communiques/${communiqueId}`)
+  revalidatePath('/')
+  redirect('/admin/communiques')
+}
+
+export async function supprimerCommunique(formData: FormData) {
+  const { supabase } = await requireAdminOuPresident()
+
+  const communiqueId = formData.get('communiqueId') as string
+
+  await supabase.from('communiques').delete().eq('id', communiqueId)
 
   revalidatePath('/admin/communiques')
   revalidatePath('/communiques')

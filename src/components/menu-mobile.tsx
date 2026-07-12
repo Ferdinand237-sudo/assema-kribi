@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { deconnecter } from '@/app/(auth)/actions'
 
 type Lien = { href: string; label: string; badge?: number }
@@ -32,7 +33,7 @@ export default function MenuMobile({
         {ouvert ? '✕' : '☰'}
       </button>
 
-      {ouvert && (
+      {ouvert && createPortal(
         <div className="fixed inset-0 top-[57px] z-40 overflow-y-auto bg-white p-4">
           <nav className="flex flex-col gap-1 text-sm">
             {liensPublics.map((l) => (
@@ -89,7 +90,8 @@ export default function MenuMobile({
               </>
             )}
           </nav>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )

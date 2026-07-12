@@ -11,6 +11,7 @@ export default async function PageModifierArticle({
 }) {
   const { id } = await params
   const { supabase, profile } = await requireRedacteur()
+  const estAdminOuPresident = ['admin', 'president'].includes(profile.role)
 
   const { data: article } = await supabase
     .from('articles')
@@ -38,9 +39,15 @@ export default async function PageModifierArticle({
               <BoutonEnvoi name="_action" value="brouillon" className="bouton bouton-secondaire" texteEnvoi="Enregistrement...">
                 Enregistrer en brouillon
               </BoutonEnvoi>
-              <BoutonEnvoi name="_action" value="soumettre" className="bouton bouton-primaire" texteEnvoi="Envoi...">
-                Soumettre au président
-              </BoutonEnvoi>
+              {estAdminOuPresident ? (
+                <BoutonEnvoi name="_action" value="publier_directement" className="bouton bouton-primaire" texteEnvoi="Publication...">
+                  Publier directement
+                </BoutonEnvoi>
+              ) : (
+                <BoutonEnvoi name="_action" value="soumettre" className="bouton bouton-primaire" texteEnvoi="Envoi...">
+                  Soumettre au président
+                </BoutonEnvoi>
+              )}
             </>
           )}
         </div>

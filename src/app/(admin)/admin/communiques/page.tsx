@@ -19,7 +19,8 @@ export default async function PageAdminCommuniques() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-10">
-      <h1 className="mb-6 font-display text-2xl font-semibold text-encre sm:text-3xl">Communiqués & diffusion</h1>
+      <a href="/admin" className="text-xs font-medium text-primaire hover:underline">← Tableau de bord</a>
+      <h1 className="mb-6 mt-2 font-display text-2xl font-semibold text-encre sm:text-3xl">Communiqués & diffusion</h1>
 
       <form action={creerCommunique} className="cadre mb-8 space-y-3 border border-black/10 bg-white p-4 pt-5 shadow-sm">
         <h2 className="font-semibold text-encre">Nouveau communiqué</h2>

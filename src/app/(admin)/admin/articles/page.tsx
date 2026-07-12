@@ -15,7 +15,8 @@ export default async function PageAdminArticles() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-10">
-      <h1 className="mb-6 font-display text-2xl font-semibold text-encre sm:text-3xl">Articles à valider</h1>
+      <a href="/admin" className="text-xs font-medium text-primaire hover:underline">← Tableau de bord</a>
+      <h1 className="mb-6 mt-2 font-display text-2xl font-semibold text-encre sm:text-3xl">Articles à valider</h1>
 
       {articles && articles.length > 0 ? (
         <div className="space-y-4">

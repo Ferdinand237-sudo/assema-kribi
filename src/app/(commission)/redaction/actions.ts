@@ -13,7 +13,7 @@ export async function creerArticle(formData: FormData) {
   const content = formData.get('content') as string
   const action = formData.get('_action') as string
 
-  const status = action === 'soumettre' ? 'pending' : 'draft'
+  const status = action === 'publier_directement' ? 'published' : action === 'soumettre' ? 'pending' : 'draft'
 
   await supabase.from('articles').insert({
     categorie,
@@ -22,6 +22,9 @@ export async function creerArticle(formData: FormData) {
     title,
     content,
     status,
+    published_at: status === 'published' ? new Date().toISOString() : null,
+    validated_by: status === 'published' ? profile.id : null,
+    validated_at: status === 'published' ? new Date().toISOString() : null,
   })
 
   revalidatePath('/redaction')
@@ -39,9 +42,16 @@ export async function modifierArticle(formData: FormData) {
 
   const status = action === 'publier_directement' ? 'published' : action === 'soumettre' ? 'pending' : 'draft'
 
+  const misAJour: Record<string, unknown> = { title, content, status, rejection_reason: null }
+  if (status === 'published') {
+    misAJour.published_at = new Date().toISOString()
+    misAJour.validated_by = profile.id
+    misAJour.validated_at = new Date().toISOString()
+  }
+
   await supabase
     .from('articles')
-    .update({ title, content, status, rejection_reason: null })
+    .update(misAJour)
     .eq('id', articleId)
     .eq('author_id', profile.id)
 

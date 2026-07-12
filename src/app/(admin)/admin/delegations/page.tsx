@@ -25,7 +25,8 @@ export default async function PageDelegations() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-10">
-      <h1 className="mb-2 font-display text-2xl font-semibold text-encre sm:text-3xl">Délégations</h1>
+      <a href="/admin" className="text-xs font-medium text-primaire hover:underline">← Tableau de bord</a>
+      <h1 className="mb-2 mt-2 font-display text-2xl font-semibold text-encre sm:text-3xl">Délégations</h1>
       <p className="mb-6 text-sm text-encre/60">
         Désigne des membres pour gérer certaines sections du site, indépendamment des commissions.
       </p>

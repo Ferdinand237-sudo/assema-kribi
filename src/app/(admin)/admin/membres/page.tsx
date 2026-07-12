@@ -1,6 +1,8 @@
 import { requireAdminOuPresident } from '@/lib/auth/guards'
 import { changerRole, changerPosteBureau } from './actions'
 
+export const dynamic = 'force-dynamic'
+
 export default async function PageAdminMembres() {
   const { supabase, profile: moi } = await requireAdminOuPresident()
 
@@ -11,7 +13,8 @@ export default async function PageAdminMembres() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
-      <h1 className="mb-6 font-display text-2xl font-semibold text-encre sm:text-3xl">Membres & rôles</h1>
+      <a href="/admin" className="text-xs font-medium text-primaire hover:underline">← Tableau de bord</a>
+      <h1 className="mb-6 mt-2 font-display text-2xl font-semibold text-encre sm:text-3xl">Membres & rôles</h1>
 
       <div className="cadre overflow-x-auto border border-black/5 bg-white p-4 pt-5 shadow-sm">
         <table className="w-full text-sm">

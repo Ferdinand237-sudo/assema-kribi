@@ -24,30 +24,30 @@ export default async function PageDelegations() {
   ])
 
   return (
-    <div className="mx-auto max-w-3xl p-6">
-      <h1 className="mb-2 text-2xl font-bold">Délégations</h1>
-      <p className="mb-6 text-sm text-gray-600">
+    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-10">
+      <h1 className="mb-2 font-display text-2xl font-semibold text-encre sm:text-3xl">Délégations</h1>
+      <p className="mb-6 text-sm text-encre/60">
         Désigne des membres pour gérer certaines sections du site, indépendamment des commissions.
       </p>
 
-      <form action={assignerGestionnaire} className="mb-8 flex flex-wrap items-end gap-3 rounded border p-4">
+      <form action={assignerGestionnaire} className="cadre mb-8 flex flex-wrap items-end gap-3 border border-black/10 bg-white p-4 pt-5 shadow-sm">
         <div>
-          <label className="mb-1 block text-xs text-gray-500">Module</label>
-          <select name="module" required className="rounded border p-2 text-sm">
+          <label className="mb-1 block text-xs text-encre/60">Module</label>
+          <select name="module" required className="champ !w-auto !py-1.5 text-sm">
             {MODULES.map((m) => (
               <option key={m.valeur} value={m.valeur}>{m.label}</option>
             ))}
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-xs text-gray-500">Membre</label>
-          <select name="profileId" required className="rounded border p-2 text-sm">
+          <label className="mb-1 block text-xs text-encre/60">Membre</label>
+          <select name="profileId" required className="champ !w-auto !py-1.5 text-sm">
             {profiles?.map((p) => (
               <option key={p.id} value={p.id}>{p.first_name} {p.last_name}</option>
             ))}
           </select>
         </div>
-        <button type="submit" className="rounded bg-primaire px-4 py-2 text-sm text-white hover:bg-primaire-fonce">
+        <button type="submit" className="bouton bouton-primaire !py-1.5">
           Assigner
         </button>
       </form>
@@ -56,22 +56,22 @@ export default async function PageDelegations() {
         {MODULES.map((m) => {
           const assignes = (gestionnaires ?? []).filter((g: any) => g.module === m.valeur)
           return (
-            <div key={m.valeur} className="rounded border p-3">
-              <p className="mb-2 text-sm font-semibold">{m.label}</p>
+            <div key={m.valeur} className="cadre border border-black/5 bg-white p-3 pt-4 shadow-sm">
+              <p className="mb-2 text-sm font-semibold text-encre">{m.label}</p>
               {assignes.length > 0 ? (
                 <ul className="space-y-1">
                   {assignes.map((g: any) => (
-                    <li key={g.id} className="flex items-center justify-between text-sm">
+                    <li key={g.id} className="flex items-center justify-between text-sm text-encre/85">
                       <span>{g.profiles?.first_name} {g.profiles?.last_name}</span>
                       <form action={retirerGestionnaire}>
                         <input type="hidden" name="id" value={g.id} />
-                        <button type="submit" className="text-xs text-red-600 hover:underline">Retirer</button>
+                        <button type="submit" className="text-xs text-erreur hover:underline">Retirer</button>
                       </form>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-xs text-gray-400">Personne assigné — géré par défaut par l'admin/président.</p>
+                <p className="text-xs text-encre/40">Personne assigné — géré par défaut par l'admin/président.</p>
               )}
             </div>
           )

@@ -65,3 +65,31 @@ export async function deconnecter() {
   await supabase.auth.signOut()
   redirect('/connexion')
 }
+
+export async function demanderReinitialisation(formData: FormData) {
+  const supabase = await createClient()
+  const email = formData.get('email') as string
+
+  await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/reinitialiser-mot-de-passe`,
+  })
+
+  // On répond toujours pareil, que l'email existe ou non, pour ne pas révéler qui est inscrit.
+  redirect('/mot-de-passe-oublie?envoye=1')
+}
+
+export async function definirNouveauMotDePasse(formData: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/connexion')
+
+  const password = formData.get('password') as string
+
+  const { error } = await supabase.auth.updateUser({ password })
+
+  if (error) {
+    redirect(`/reinitialiser-mot-de-passe?erreur=${encodeURIComponent(error.message)}`)
+  }
+
+  redirect('/profil?succes=1')
+}

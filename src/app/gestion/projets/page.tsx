@@ -13,40 +13,40 @@ export default async function PageGestionProjets() {
     .order('created_at', { ascending: false })
 
   return (
-    <div className="mx-auto max-w-3xl p-6">
-      <h1 className="mb-6 text-2xl font-bold">Gestion des projets réalisés</h1>
+    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-10">
+      <h1 className="mb-6 font-display text-2xl font-semibold text-encre sm:text-3xl">Gestion des projets réalisés</h1>
 
-      <form action={creerProjet} className="mb-10 space-y-3 rounded border p-4">
-        <h2 className="font-semibold">Nouveau projet</h2>
-        <input name="titre" placeholder="Titre du projet" required className="w-full rounded border p-2" />
+      <form action={creerProjet} className="cadre mb-10 space-y-3 border border-black/10 bg-white p-4 pt-5 shadow-sm">
+        <h2 className="font-semibold text-encre">Nouveau projet</h2>
+        <input name="titre" placeholder="Titre du projet" required className="champ" />
         <EditeurFormatte name="description" placeholder="Description" rows={3} />
         <EditeurFormatte name="resultats" placeholder="Résultats et impacts" rows={3} />
         <div>
-          <label className="mb-1 block text-xs text-gray-500">Photos / vidéos</label>
-          <input type="file" name="medias" accept="image/*,video/*" multiple className="text-sm" />
+          <label className="mb-1 block text-xs text-encre/60">Photos / vidéos</label>
+          <input type="file" name="medias" accept="image/*,video/*" multiple className="champ-fichier" />
         </div>
-        <button type="submit" className="rounded bg-primaire px-4 py-2 text-sm text-white hover:bg-primaire-fonce">
+        <button type="submit" className="bouton bouton-primaire">
           Créer
         </button>
       </form>
 
       <div className="space-y-6">
         {projets?.map((p: any) => (
-          <div key={p.id} className="rounded border p-4">
+          <div key={p.id} className="cadre border border-black/5 bg-white p-4 pt-5 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
-              <h3 className="font-semibold">{p.titre}</h3>
+              <h3 className="font-semibold text-encre">{p.titre}</h3>
               <form action={supprimerProjet}>
                 <input type="hidden" name="id" value={p.id} />
-                <button type="submit" className="text-xs text-red-600 hover:underline">Supprimer</button>
+                <button type="submit" className="text-xs text-erreur hover:underline">Supprimer</button>
               </form>
             </div>
-            {p.description && <p className="mb-1 text-sm text-gray-600">{p.description}</p>}
-            {p.resultats && <p className="mb-3 text-xs text-gray-500">Résultats : {p.resultats}</p>}
+            {p.description && <p className="mb-1 text-sm text-encre/70">{p.description}</p>}
+            {p.resultats && <p className="mb-3 text-xs text-encre/60">Résultats : {p.resultats}</p>}
 
             {(p.projet_medias ?? []).length > 0 && (
               <div className="mb-3 grid grid-cols-4 gap-2 sm:grid-cols-6">
                 {p.projet_medias.map((m: any) => (
-                  <div key={m.id} className="group relative overflow-hidden rounded border">
+                  <div key={m.id} className="group relative overflow-hidden rounded-lg border border-black/10">
                     {m.type === 'video' ? (
                       <video src={m.url} className="h-16 w-full object-cover" />
                     ) : (
@@ -54,24 +54,24 @@ export default async function PageGestionProjets() {
                     )}
                     <form action={supprimerMediaProjet} className="absolute right-1 top-1">
                       <input type="hidden" name="id" value={m.id} />
-                      <button type="submit" className="rounded bg-red-600 px-1 text-xs text-white opacity-0 group-hover:opacity-100">✕</button>
+                      <button type="submit" className="rounded bg-erreur px-1 text-xs text-white opacity-0 group-hover:opacity-100">✕</button>
                     </form>
                   </div>
                 ))}
               </div>
             )}
 
-            <form action={ajouterMediasProjet} className="flex items-center gap-2">
+            <form action={ajouterMediasProjet} className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <input type="hidden" name="projetId" value={p.id} />
-              <input type="file" name="medias" accept="image/*,video/*" multiple className="flex-1 text-sm" />
-              <button type="submit" className="rounded bg-gray-200 px-3 py-1.5 text-sm hover:bg-gray-300">
+              <input type="file" name="medias" accept="image/*,video/*" multiple className="champ-fichier flex-1" />
+              <button type="submit" className="bouton bouton-secondaire !py-1.5">
                 Ajouter
               </button>
             </form>
           </div>
         ))}
         {(!projets || projets.length === 0) && (
-          <p className="text-sm text-gray-500">Aucun projet pour le moment.</p>
+          <p className="text-sm text-encre/60">Aucun projet pour le moment.</p>
         )}
       </div>
     </div>

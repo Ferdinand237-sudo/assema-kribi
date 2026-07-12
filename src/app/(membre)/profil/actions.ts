@@ -9,6 +9,11 @@ export async function mettreAJourProfil(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/connexion')
 
+  const competences = (formData.get('competences') as string)
+    .split(',')
+    .map((c) => c.trim())
+    .filter(Boolean)
+
   // Infos du profil
   const { error: erreurProfil } = await supabase
     .from('profiles')
@@ -21,6 +26,7 @@ export async function mettreAJourProfil(formData: FormData) {
       ecole: formData.get('ecole') as string,
       bio: formData.get('bio') as string,
       telephone: formData.get('telephone') as string,
+      competences: competences.length > 0 ? competences : null,
       allow_messages: formData.get('allow_messages') === 'on',
     })
     .eq('id', user.id)

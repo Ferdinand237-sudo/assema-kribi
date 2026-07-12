@@ -27,15 +27,17 @@ export default async function PageMonProfil({
     cvSignedUrl = data?.signedUrl ?? null
   }
 
+  const competencesTexte = (profile?.competences ?? []).join(', ')
+
   return (
-    <div className="mx-auto max-w-2xl px-6 py-10">
-      <div className="mb-6 flex items-center gap-4">
+    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-10">
+      <div className="mb-6 flex items-center gap-3 sm:gap-4">
         {profile?.avatar_url && (
-          <ZoomableImage src={profile.avatar_url} alt="Photo de profil" className="h-16 w-16 rounded-full object-cover" />
+          <ZoomableImage src={profile.avatar_url} alt="Photo de profil" className="h-14 w-14 flex-shrink-0 rounded-full object-cover sm:h-16 sm:w-16" />
         )}
-        <div>
-          <h1 className="text-2xl font-semibold text-encre">Mon profil</h1>
-          <a href={`/membres/${user.id}`} className="text-sm text-primaire hover:underline">
+        <div className="min-w-0">
+          <h1 className="text-xl font-semibold text-encre sm:text-2xl">Mon profil</h1>
+          <a href={`/membres/${user.id}`} className="block text-sm text-primaire hover:underline">
             Voir mon profil public
           </a>
         </div>
@@ -45,18 +47,18 @@ export default async function PageMonProfil({
       {succes && <p className="confirmation-douce badge-succes mb-4 block w-fit rounded-lg px-4 py-3 text-sm">Mis à jour !</p>}
 
       {/* Upload photo */}
-      <section className="mb-6 rounded-lg border border-black/10 p-4">
+      <section className="cadre mb-4 border border-black/10 bg-white p-4 pt-5 shadow-sm">
         <h2 className="mb-2 font-semibold text-encre">Photo de profil</h2>
-        <form action={uploaderPhoto} className="flex items-center gap-3">
-          <input type="file" name="photo" accept="image/*" required className="text-sm" />
-          <button type="submit" className="bouton bouton-secondaire !py-1.5">
+        <form action={uploaderPhoto} className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <input type="file" name="photo" accept="image/*" required className="champ-fichier" />
+          <button type="submit" className="bouton bouton-secondaire !py-1.5 sm:flex-shrink-0">
             Changer
           </button>
         </form>
       </section>
 
       {/* Upload CV */}
-      <section className="mb-6 rounded-lg border border-black/10 p-4">
+      <section className="cadre mb-6 border border-black/10 bg-white p-4 pt-5 shadow-sm">
         <h2 className="mb-2 font-semibold text-encre">CV (PDF)</h2>
         {cvSignedUrl && (
           <p className="mb-2 text-sm">
@@ -65,9 +67,9 @@ export default async function PageMonProfil({
             </a>
           </p>
         )}
-        <form action={uploaderCV} className="flex items-center gap-3">
-          <input type="file" name="cv" accept="application/pdf" required className="text-sm" />
-          <button type="submit" className="bouton bouton-secondaire !py-1.5">
+        <form action={uploaderCV} className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <input type="file" name="cv" accept="application/pdf" required className="champ-fichier" />
+          <button type="submit" className="bouton bouton-secondaire !py-1.5 sm:flex-shrink-0">
             {cvSignedUrl ? 'Remplacer' : 'Ajouter'}
           </button>
         </form>
@@ -76,18 +78,22 @@ export default async function PageMonProfil({
       <form action={mettreAJourProfil} className="space-y-6">
         <section className="space-y-3">
           <h2 className="font-semibold text-encre">Informations</h2>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <input name="firstName" defaultValue={profile?.first_name ?? ''} placeholder="Prénom" required className="champ" />
             <input name="lastName" defaultValue={profile?.last_name ?? ''} placeholder="Nom" required className="champ" />
           </div>
           <input name="filiere" defaultValue={profile?.filiere ?? ''} placeholder="Filière" required className="champ" />
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <input name="niveauEtude" defaultValue={profile?.niveau_etude ?? ''} placeholder="Niveau d'étude" className="champ" />
             <input name="village" defaultValue={profile?.village ?? ''} placeholder="Village" className="champ" />
           </div>
           <input name="ecole" defaultValue={profile?.ecole ?? ''} placeholder="École" className="champ" />
           <input name="telephone" defaultValue={profile?.telephone ?? ''} placeholder="Téléphone" className="champ" />
           <textarea name="bio" defaultValue={profile?.bio ?? ''} placeholder="Bio courte" rows={3} className="champ" />
+          <div>
+            <input name="competences" defaultValue={competencesTexte} placeholder="Compétences (séparées par une virgule)" className="champ" />
+            <p className="mt-1 text-xs text-encre/50">Ex : Développement web, Comptabilité, Prise de parole en public</p>
+          </div>
         </section>
 
         <section className="space-y-2 border-t border-black/10 pt-4">

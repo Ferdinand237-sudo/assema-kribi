@@ -22,6 +22,7 @@ export default function MenuMobile({
   avatarUrl?: string
 }) {
   const [ouvert, setOuvert] = useState(false)
+  const [sousMenuOuvert, setSousMenuOuvert] = useState<'informations' | 'gestion' | null>(null)
 
   return (
     <div className="lg:hidden">
@@ -43,26 +44,55 @@ export default function MenuMobile({
             ))}
 
             {liensInformations.length > 0 && (
-              <>
-                <p className="mt-3 px-3 text-xs font-semibold uppercase text-encre/40">Informations</p>
-                {liensInformations.map((l) => (
-                  <a key={l.href} href={l.href} onClick={() => setOuvert(false)} className="flex items-center justify-between rounded px-3 py-2 text-encre/85 hover:bg-fond-clair hover:text-primaire">
-                    {l.label}
-                    {!!l.badge && <span className="pastille-vivante rounded-full bg-primaire px-2 text-xs text-white">{l.badge}</span>}
-                  </a>
-                ))}
-              </>
+              <div className="mt-2">
+                <button
+                  type="button"
+                  onClick={() => setSousMenuOuvert(sousMenuOuvert === 'informations' ? null : 'informations')}
+                  className="flex w-full items-center justify-between rounded px-3 py-2 text-xs font-semibold uppercase text-encre/60 hover:bg-fond-clair"
+                >
+                  <span className="flex items-center gap-1.5">
+                    Informations
+                    {liensInformations.some((l) => !!l.badge) && (
+                      <span className="pastille-vivante rounded-full bg-primaire px-1.5 normal-case text-white">
+                        {liensInformations.reduce((total, l) => total + (l.badge ?? 0), 0)}
+                      </span>
+                    )}
+                  </span>
+                  <span className={`text-encre/40 transition-transform ${sousMenuOuvert === 'informations' ? 'rotate-180' : ''}`}>▾</span>
+                </button>
+                {sousMenuOuvert === 'informations' && (
+                  <div className="pl-2">
+                    {liensInformations.map((l) => (
+                      <a key={l.href} href={l.href} onClick={() => setOuvert(false)} className="flex items-center justify-between rounded px-3 py-2 text-encre/85 hover:bg-fond-clair hover:text-primaire">
+                        {l.label}
+                        {!!l.badge && <span className="pastille-vivante rounded-full bg-primaire px-2 text-xs text-white">{l.badge}</span>}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
             )}
 
             {liensGestion.length > 0 && (
-              <>
-                <p className="mt-3 px-3 text-xs font-semibold uppercase text-encre/40">Gestion</p>
-                {liensGestion.map((l) => (
-                  <a key={l.href} href={l.href} onClick={() => setOuvert(false)} className="rounded px-3 py-2 text-encre/85 hover:bg-fond-clair hover:text-primaire">
-                    {l.label}
-                  </a>
-                ))}
-              </>
+              <div className="mt-1">
+                <button
+                  type="button"
+                  onClick={() => setSousMenuOuvert(sousMenuOuvert === 'gestion' ? null : 'gestion')}
+                  className="flex w-full items-center justify-between rounded px-3 py-2 text-xs font-semibold uppercase text-encre/60 hover:bg-fond-clair"
+                >
+                  Gestion
+                  <span className={`text-encre/40 transition-transform ${sousMenuOuvert === 'gestion' ? 'rotate-180' : ''}`}>▾</span>
+                </button>
+                {sousMenuOuvert === 'gestion' && (
+                  <div className="pl-2">
+                    {liensGestion.map((l) => (
+                      <a key={l.href} href={l.href} onClick={() => setOuvert(false)} className="rounded px-3 py-2 text-encre/85 hover:bg-fond-clair hover:text-primaire">
+                        {l.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
             )}
 
             <div className="my-3 border-t border-black/10" />

@@ -43,7 +43,7 @@ export default async function PageRedaction() {
     <div className="mx-auto max-w-2xl px-6 py-10">
       <h1 className="mb-6 text-2xl font-semibold text-encre">Espace rédaction</h1>
 
-      <form action={creerArticle} className="mb-8 space-y-3 rounded-lg border border-black/10 p-4">
+      <form action={creerArticle} className="cadre mb-8 space-y-3 border border-black/10 bg-white p-4 pt-5 shadow-sm">
         <h2 className="font-semibold text-encre">Nouvel article</h2>
 
         {commissions.length > 0 && (
@@ -85,7 +85,7 @@ export default async function PageRedaction() {
           const statut = LABELS_STATUT[a.status]
           const sourceLabel = a.categorie === 'commission' ? a.commissions?.nom : LABELS_CATEGORIE[a.categorie]
           return (
-            <div key={a.id} className="rounded-lg border border-black/10 p-3">
+            <div key={a.id} className="cadre border border-black/10 bg-white p-3 pt-4 shadow-sm">
               <div className="flex items-center justify-between">
                 <p className="font-medium text-encre">{a.title}</p>
                 <span className={`badge-statut ${statut.classe}`}>{statut.label}</span>

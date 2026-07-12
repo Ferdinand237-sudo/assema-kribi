@@ -3,14 +3,18 @@ import { deconnecter } from '@/app/(auth)/actions'
 import MenuMobile from './menu-mobile'
 import NavDropdown from './nav-dropdown'
 
-const LIENS_PUBLICS = [
+const LIENS_PUBLICS_BASE = [
   { href: '/', label: 'Accueil' },
-  { href: '/a-propos', label: 'À propos' },
   { href: '/bureau-executif', label: 'Bureau' },
   { href: '/culture-mabi', label: 'Culture Mabi' },
   { href: '/partenaires', label: 'Partenaires' },
   { href: '/galerie', label: 'Galerie' },
-  { href: '/forum', label: 'Forum' },
+]
+
+const LIEN_FORUM = { href: '/forum', label: 'Forum' }
+
+const LIENS_PUBLICS_FIN = [
+  { href: '/a-propos', label: 'À propos' },
   { href: '/contact', label: 'Contact' },
 ]
 
@@ -96,8 +100,16 @@ export default async function SiteHeader() {
     ...liensModules,
     ]
 
+  // Le forum n'est accessible qu'aux membres connectés (échanges internes) ;
+  // "À propos" vient juste après, qu'il soit affiché ou non.
+  const liensPublics = [
+    ...LIENS_PUBLICS_BASE,
+    ...(user ? [LIEN_FORUM] : []),
+    ...LIENS_PUBLICS_FIN,
+  ]
+
   return (
-    <header className="sticky top-0 z-50 border-b border-black/5 bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-black/5 bg-fond-clair/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <a href="/" className="flex items-center gap-2">
           <img src="/logo-assema.jpeg" alt="ASSEMA Kribi" className="h-10 w-10 rounded-full object-cover" />
@@ -105,7 +117,7 @@ export default async function SiteHeader() {
         </a>
 
         <nav className="hidden items-center gap-4 lg:flex">
-          {LIENS_PUBLICS.map((l) => (
+          {liensPublics.map((l) => (
             <a key={l.href} href={l.href} className="text-sm text-encre/80 transition-colors hover:text-primaire">
               {l.label}
             </a>
@@ -141,7 +153,7 @@ export default async function SiteHeader() {
         </div>
 
         <MenuMobile
-          liensPublics={LIENS_PUBLICS}
+          liensPublics={liensPublics}
           liensInformations={liensInformations}
           liensGestion={liensGestion}
           connecte={!!user}

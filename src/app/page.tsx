@@ -125,7 +125,7 @@ export default async function PageAccueil() {
           <div className="space-y-4">
             {actualites.map((a, i) => (
               <Reveal key={a.id} delayMs={i * 80}>
-                <div className="rounded-lg border border-black/5 bg-white p-4 shadow-sm">
+                <div className="cadre border border-black/5 bg-white p-4 pt-5 shadow-sm">
                   <p className="font-mono text-xs font-medium uppercase tracking-wide text-primaire">{a.source}</p>
                   <h3 className="font-semibold text-encre">{a.titre}</h3>
                   <p className="mt-1 text-sm text-encre/70">{a.extrait}...</p>

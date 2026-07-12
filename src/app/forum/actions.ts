@@ -51,8 +51,9 @@ export async function repondreSujet(formData: FormData) {
   const topicId = formData.get('topicId') as string
   const categoryId = formData.get('categoryId') as string
   const content = formData.get('content') as string
+  const replyToId = (formData.get('replyToId') as string) || null
 
-  await supabase.from('forum_posts').insert({ topic_id: topicId, author_id: user.id, content })
+  await supabase.from('forum_posts').insert({ topic_id: topicId, author_id: user.id, content, reply_to_id: replyToId })
 
   revalidatePath(`/forum/${categoryId}/${topicId}`)
   redirect(`/forum/${categoryId}/${topicId}`)

@@ -154,15 +154,64 @@ select:focus-visible,
     color: #4B5565;
   }
 
+  /* Forme signature des blocs d'information : coin adouci asymétrique plutôt qu'un
+     rectangle arrondi générique, pour donner une identité visuelle propre au site. */
+  .carte-interactive,
+  .cadre {
+    border-radius: 22px 22px 22px 6px !important;
+  }
+
   /* Cartes cliquables réactives au survol (voir section 3.3 des instructions design) */
   .carte-interactive {
     transition: transform 200ms ease-out, box-shadow 200ms ease-out, border-color 200ms ease-out;
   }
   @media (hover: hover) {
     .carte-interactive:hover {
-      transform: translateY(-4px);
+      transform: translateY(-4px) rotate(-0.3deg);
       box-shadow: 0 12px 24px -12px rgb(22 35 63 / 0.18);
+      border-color: rgb(46 155 224 / 0.3);
     }
+  }
+
+  /* Bloc d'information statique (non cliquable) : même forme signature, sans survol */
+  .cadre {
+    position: relative;
+  }
+  .cadre::before {
+    content: '';
+    position: absolute;
+    left: 22px;
+    right: 22px;
+    top: 0;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
+    background: linear-gradient(90deg, var(--couleur-primaire), var(--couleur-primaire-fonce));
+    opacity: 0.55;
+  }
+
+  /* Bouton d'envoi en forme de flèche (voir messagerie) */
+  .bouton-fleche {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    height: 2.65rem;
+    width: 2.65rem;
+    border-radius: 9999px;
+    background: var(--couleur-primaire);
+    color: var(--couleur-blanc);
+    transition: background-color 150ms ease-out, transform 150ms ease-out;
+  }
+  .bouton-fleche:hover:not(:disabled) {
+    background: var(--couleur-primaire-fonce);
+    transform: translateY(-2px);
+  }
+  .bouton-fleche:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  .bouton-fleche:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
   /* Apparition au défilement (voir section 3.2) : classes pilotées par le composant Reveal.

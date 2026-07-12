@@ -33,7 +33,7 @@ export default async function PageCommuniques() {
           return (
             <div
               key={c.id}
-              className={`rounded-lg border p-4 ${destinataire && !destinataire.read ? 'border-primaire/40 bg-fond-clair' : 'border-black/10'}`}
+              className={`cadre border p-4 pt-5 ${destinataire && !destinataire.read ? 'border-primaire/40 bg-fond-clair' : 'border-black/10 bg-white'}`}
             >
               <p className="font-mono text-xs uppercase tracking-wide text-primaire">{source}</p>
               <h3 className="font-semibold text-encre">{c.title}</h3>

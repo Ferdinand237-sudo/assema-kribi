@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import { envoyerMessage } from '../actions'
 import ZoomableImage from '@/components/zoomable-image'
+import BoutonEnvoiFleche from '@/components/bouton-envoi-fleche'
 
 export const dynamic = 'force-dynamic'
 
@@ -91,12 +92,7 @@ export default async function PageConversation({
               rows={2}
               className="champ max-h-32 flex-1 resize-none"
             />
-            <button type="submit" className="bouton-fleche" aria-label="Envoyer le message">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                <path d="M12 19V5" />
-                <path d="M6 11l6-6 6 6" />
-              </svg>
-            </button>
+            <BoutonEnvoiFleche />
           </form>
         ) : (
           <p className="border-t border-black/10 pt-3 text-sm text-encre/60">

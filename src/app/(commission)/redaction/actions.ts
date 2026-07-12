@@ -37,7 +37,7 @@ export async function modifierArticle(formData: FormData) {
   const content = formData.get('content') as string
   const action = formData.get('_action') as string
 
-  const status = action === 'soumettre' ? 'pending' : 'draft'
+  const status = action === 'publier_directement' ? 'published' : action === 'soumettre' ? 'pending' : 'draft'
 
   await supabase
     .from('articles')
@@ -48,4 +48,19 @@ export async function modifierArticle(formData: FormData) {
   revalidatePath('/redaction')
   revalidatePath('/admin/articles')
   redirect('/redaction')
+}
+
+export async function supprimerArticle(formData: FormData) {
+  const { supabase, profile } = await requireRedacteur()
+
+  const articleId = formData.get('articleId') as string
+
+  await supabase
+    .from('articles')
+    .delete()
+    .eq('id', articleId)
+    .eq('author_id', profile.id)
+
+  revalidatePath('/redaction')
+  revalidatePath('/admin/articles')
 }

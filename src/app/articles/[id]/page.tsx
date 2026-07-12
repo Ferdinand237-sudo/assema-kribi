@@ -42,9 +42,9 @@ export default async function PageArticle({
     <div className="mx-auto max-w-2xl px-6 py-12">
       <a href={retour.href} className="text-xs font-medium text-primaire hover:underline">{retour.label}</a>
 
-      <p className="mb-1 mt-4 font-mono text-xs font-medium uppercase tracking-wide text-primaire">{source}</p>
-      <h1 className="mb-2 font-display text-3xl font-semibold text-encre">{article.title}</h1>
-      <p className="mb-6 text-xs text-encre/50">
+      <p className="mb-1 mt-4 text-center font-mono text-xs font-medium uppercase tracking-wide text-primaire">{source}</p>
+      <h1 className="mb-2 text-center font-display text-3xl font-semibold text-encre">{article.title}</h1>
+      <p className="mb-6 text-center text-xs text-encre/50">
         Par {(article.profiles as any)?.first_name} {(article.profiles as any)?.last_name}
         {article.published_at && ` — ${new Date(article.published_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}`}
       </p>
@@ -53,7 +53,9 @@ export default async function PageArticle({
         <ZoomableImage src={article.cover_image_url} alt="" className="mb-6 h-64 w-full rounded-lg object-cover" />
       )}
 
-      <ContenuFormatte texte={article.content} />
+      <div className="text-justify">
+        <ContenuFormatte texte={article.content} />
+      </div>
     </div>
   )
 }

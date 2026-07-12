@@ -4,6 +4,7 @@ import { useState } from 'react'
 import ZoomableImage from '@/components/zoomable-image'
 import ContenuFormatte from '@/components/contenu-formatte'
 import EditeurFormatte from '@/components/editeur-formatte'
+import BoutonEnvoi from '@/components/bouton-envoi'
 
 type Auteur = { first_name: string | null; last_name: string | null; avatar_url?: string | null }
 type MessageCite = { id: string; content: string; profiles: Auteur | null }
@@ -104,9 +105,7 @@ export default function ForumFil({
 
         <EditeurFormatte name="content" placeholder="Ta réponse..." rows={3} required />
         <div className="flex justify-end">
-          <button type="submit" className="bouton bouton-primaire">
-            Répondre
-          </button>
+          <BoutonEnvoi texteEnvoi="Envoi...">Répondre</BoutonEnvoi>
         </div>
       </form>
     </div>

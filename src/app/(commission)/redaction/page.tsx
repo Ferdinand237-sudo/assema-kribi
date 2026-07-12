@@ -1,6 +1,8 @@
 import { requireRedacteur } from '@/lib/auth/guards'
-import { creerArticle } from './actions'
+import { creerArticle, supprimerArticle } from './actions'
 import EditeurFormatte from '@/components/editeur-formatte'
+import BoutonEnvoi from '@/components/bouton-envoi'
+import BoutonConfirmation from '@/components/bouton-confirmation'
 
 export const dynamic = 'force-dynamic'
 
@@ -70,12 +72,12 @@ export default async function PageRedaction() {
         <input name="title" placeholder="Titre" required className="champ" />
         <EditeurFormatte name="content" placeholder="Contenu de l'article" required />
         <div className="flex gap-2">
-          <button type="submit" name="_action" value="brouillon" className="bouton bouton-secondaire">
+          <BoutonEnvoi name="_action" value="brouillon" className="bouton bouton-secondaire" texteEnvoi="Enregistrement...">
             Enregistrer en brouillon
-          </button>
-          <button type="submit" name="_action" value="soumettre" className="bouton bouton-primaire">
+          </BoutonEnvoi>
+          <BoutonEnvoi name="_action" value="soumettre" className="bouton bouton-primaire" texteEnvoi="Envoi...">
             Soumettre au président
-          </button>
+          </BoutonEnvoi>
         </div>
       </form>
 
@@ -94,11 +96,20 @@ export default async function PageRedaction() {
               {a.status === 'rejected' && a.rejection_reason && (
                 <p className="mt-1 text-xs text-erreur">Motif du rejet : {a.rejection_reason}</p>
               )}
-              {(a.status === 'draft' || a.status === 'rejected') && (
-                <a href={`/redaction/${a.id}`} className="mt-1 inline-block text-xs font-medium text-primaire hover:underline">
+              <div className="mt-2 flex items-center gap-3">
+                <a href={`/redaction/${a.id}`} className="text-xs font-medium text-primaire hover:underline">
                   Modifier
                 </a>
-              )}
+                <form action={supprimerArticle}>
+                  <input type="hidden" name="articleId" value={a.id} />
+                  <BoutonConfirmation
+                    message={`Supprimer définitivement l'article "${a.title}" ?`}
+                    className="text-xs font-medium text-erreur hover:underline"
+                  >
+                    Supprimer
+                  </BoutonConfirmation>
+                </form>
+              </div>
             </div>
           )
         })}

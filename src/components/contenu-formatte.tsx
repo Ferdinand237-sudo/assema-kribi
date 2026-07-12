@@ -1,31 +1,29 @@
+import DOMPurify from 'isomorphic-dompurify'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
+// Détecte si le contenu a été rédigé avec le nouvel éditeur riche (HTML) plutôt
+// qu'avec l'ancien éditeur markdown (contenu déjà en base avant la mise à jour).
+function estDuHtml(texte: string) {
+  return /<\/?(p|h[1-6]|ul|ol|li|blockquote|strong|em|a|hr)[ >]/i.test(texte)
+}
+
+const BALISES_AUTORISEES = ['p', 'br', 'strong', 'em', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'blockquote', 'a', 'hr']
+const ATTRIBUTS_AUTORISES = ['href', 'target', 'rel', 'style']
+
 export default function ContenuFormatte({ texte }: { texte: string }) {
+  if (estDuHtml(texte)) {
+    const propre = DOMPurify.sanitize(texte, {
+      ALLOWED_TAGS: BALISES_AUTORISEES,
+      ALLOWED_ATTR: ATTRIBUTS_AUTORISES,
+    })
+    return <div className="contenu-riche" dangerouslySetInnerHTML={{ __html: propre }} />
+  }
+
+  // Rétrocompatibilité : contenu rédigé avant le passage à l'éditeur riche (markdown brut).
   return (
-    <div className="space-y-3 text-encre/80">
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        components={{
-          h1: ({ children }) => <h2 className="font-display text-xl font-semibold text-primaire">{children}</h2>,
-          h2: ({ children }) => <h3 className="font-display text-lg font-semibold text-primaire">{children}</h3>,
-          p: ({ children }) => <p className="whitespace-pre-line">{children}</p>,
-          strong: ({ children }) => <strong className="font-semibold text-encre">{children}</strong>,
-          em: ({ children }) => <em className="italic">{children}</em>,
-          ul: ({ children }) => <ul className="list-inside list-disc space-y-1">{children}</ul>,
-          ol: ({ children }) => <ol className="list-inside list-decimal space-y-1">{children}</ol>,
-          blockquote: ({ children }) => (
-            <blockquote className="border-l-4 border-primaire pl-4 italic text-encre/70">{children}</blockquote>
-          ),
-          a: ({ children, href }) => (
-            <a href={href} target="_blank" rel="noopener noreferrer" className="text-primaire underline">
-              {children}
-            </a>
-          ),
-        }}
-      >
-        {texte}
-      </ReactMarkdown>
+    <div className="contenu-riche">
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>{texte}</ReactMarkdown>
     </div>
   )
 }

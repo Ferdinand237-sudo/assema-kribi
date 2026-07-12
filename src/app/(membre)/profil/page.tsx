@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { mettreAJourProfil, uploaderPhoto, uploaderCV } from './actions'
 import ZoomableImage from '@/components/zoomable-image'
+import BoutonEnvoi from '@/components/bouton-envoi'
 
 export const dynamic = 'force-dynamic'
 
@@ -28,6 +29,9 @@ export default async function PageMonProfil({
   }
 
   const competencesTexte = (profile?.competences ?? []).join(', ')
+  const reseaux = (profile?.reseaux_sociaux ?? {}) as Record<string, string>
+
+  const CHAMP = 'mb-1 block text-xs font-medium text-encre/70'
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-10">
@@ -79,20 +83,70 @@ export default async function PageMonProfil({
         <section className="space-y-3">
           <h2 className="font-semibold text-encre">Informations</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <input name="firstName" defaultValue={profile?.first_name ?? ''} placeholder="Prénom" required className="champ" />
-            <input name="lastName" defaultValue={profile?.last_name ?? ''} placeholder="Nom" required className="champ" />
+            <div>
+              <label htmlFor="firstName" className={CHAMP}>Prénom</label>
+              <input id="firstName" name="firstName" defaultValue={profile?.first_name ?? ''} placeholder="Prénom" required className="champ" />
+            </div>
+            <div>
+              <label htmlFor="lastName" className={CHAMP}>Nom</label>
+              <input id="lastName" name="lastName" defaultValue={profile?.last_name ?? ''} placeholder="Nom" required className="champ" />
+            </div>
           </div>
-          <input name="filiere" defaultValue={profile?.filiere ?? ''} placeholder="Filière" required className="champ" />
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <input name="niveauEtude" defaultValue={profile?.niveau_etude ?? ''} placeholder="Niveau d'étude" className="champ" />
-            <input name="village" defaultValue={profile?.village ?? ''} placeholder="Village" className="champ" />
-          </div>
-          <input name="ecole" defaultValue={profile?.ecole ?? ''} placeholder="École" className="champ" />
-          <input name="telephone" defaultValue={profile?.telephone ?? ''} placeholder="Téléphone" className="champ" />
-          <textarea name="bio" defaultValue={profile?.bio ?? ''} placeholder="Bio courte" rows={3} className="champ" />
           <div>
-            <input name="competences" defaultValue={competencesTexte} placeholder="Compétences (séparées par une virgule)" className="champ" />
+            <label htmlFor="filiere" className={CHAMP}>Filière</label>
+            <input id="filiere" name="filiere" defaultValue={profile?.filiere ?? ''} placeholder="ex : Génie Numérique" required className="champ" />
+          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div>
+              <label htmlFor="niveauEtude" className={CHAMP}>Niveau d'étude</label>
+              <input id="niveauEtude" name="niveauEtude" defaultValue={profile?.niveau_etude ?? ''} placeholder="ex : Terminale" className="champ" />
+            </div>
+            <div>
+              <label htmlFor="village" className={CHAMP}>Village d'origine</label>
+              <input id="village" name="village" defaultValue={profile?.village ?? ''} placeholder="ex : Grand Batanga" className="champ" />
+            </div>
+          </div>
+          <div>
+            <label htmlFor="ecole" className={CHAMP}>École</label>
+            <input id="ecole" name="ecole" defaultValue={profile?.ecole ?? ''} placeholder="Établissement fréquenté" className="champ" />
+          </div>
+          <div>
+            <label htmlFor="telephone" className={CHAMP}>Téléphone</label>
+            <input id="telephone" name="telephone" defaultValue={profile?.telephone ?? ''} placeholder="ex : 6XX XXX XXX" className="champ" />
+          </div>
+          <div>
+            <label htmlFor="bio" className={CHAMP}>Bio courte</label>
+            <textarea id="bio" name="bio" defaultValue={profile?.bio ?? ''} placeholder="Quelques mots pour te présenter" rows={3} className="champ" />
+          </div>
+          <div>
+            <label htmlFor="competences" className={CHAMP}>Compétences</label>
+            <input id="competences" name="competences" defaultValue={competencesTexte} placeholder="séparées par une virgule" className="champ" />
             <p className="mt-1 text-xs text-encre/50">Ex : Développement web, Comptabilité, Prise de parole en public</p>
+          </div>
+        </section>
+
+        <section className="space-y-3 border-t border-black/10 pt-4">
+          <h2 className="font-semibold text-encre">Réseaux sociaux & contact</h2>
+          <p className="text-xs text-encre/60">Facultatif. Réglés par le même choix de visibilité que les réseaux sociaux ci-dessous.</p>
+          <div>
+            <label htmlFor="facebook" className={CHAMP}>Facebook</label>
+            <input id="facebook" name="facebook" type="url" defaultValue={reseaux.facebook ?? ''} placeholder="https://facebook.com/..." className="champ" />
+          </div>
+          <div>
+            <label htmlFor="linkedin" className={CHAMP}>LinkedIn</label>
+            <input id="linkedin" name="linkedin" type="url" defaultValue={reseaux.linkedin ?? ''} placeholder="https://linkedin.com/in/..." className="champ" />
+          </div>
+          <div>
+            <label htmlFor="x" className={CHAMP}>X (Twitter)</label>
+            <input id="x" name="x" type="url" defaultValue={reseaux.x ?? ''} placeholder="https://x.com/..." className="champ" />
+          </div>
+          <div>
+            <label htmlFor="email_public" className={CHAMP}>Email de contact</label>
+            <input id="email_public" name="email_public" type="email" defaultValue={reseaux.email ?? ''} placeholder="contact@exemple.com" className="champ" />
+          </div>
+          <div>
+            <label htmlFor="whatsapp" className={CHAMP}>Numéro WhatsApp</label>
+            <input id="whatsapp" name="whatsapp" defaultValue={reseaux.whatsapp ?? ''} placeholder="ex : 237 6XX XXX XXX" className="champ" />
           </div>
         </section>
 
@@ -107,8 +161,8 @@ export default async function PageMonProfil({
             ['show_village', 'Village', privacy?.show_village],
             ['show_cv', 'CV', privacy?.show_cv],
             ['show_competences', 'Compétences', privacy?.show_competences],
-            ['show_reseaux_sociaux', 'Réseaux sociaux', privacy?.show_reseaux_sociaux],
-            ['show_contact', 'Coordonnées de contact', privacy?.show_contact],
+            ['show_reseaux_sociaux', 'Réseaux sociaux & contact (Facebook, LinkedIn, X, email, WhatsApp)', privacy?.show_reseaux_sociaux],
+            ['show_contact', 'Numéro de téléphone', privacy?.show_contact],
           ].map(([name, label, checked]) => (
             <label key={name as string} className="flex items-center gap-2 text-sm text-encre/85">
               <input type="checkbox" name={name as string} defaultChecked={!!checked} className="accent-primaire" />
@@ -122,9 +176,7 @@ export default async function PageMonProfil({
           </label>
         </section>
 
-        <button type="submit" className="bouton bouton-primaire w-full">
-          Enregistrer
-        </button>
+        <BoutonEnvoi className="bouton bouton-primaire w-full" texteEnvoi="Enregistrement...">Enregistrer</BoutonEnvoi>
       </form>
     </div>
   )

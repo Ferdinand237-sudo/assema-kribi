@@ -33,6 +33,8 @@ export async function creerCommunique(formData: FormData) {
 
   const title = formData.get('title') as string
   const content = formData.get('content') as string
+  const dateEvenement = (formData.get('date_evenement') as string) || null
+  const lieuEvenement = (formData.get('lieu_evenement') as string) || null
   const canalPublic = formData.get('canal_public') === 'on'
   const canalBureau = formData.get('canal_bureau') === 'on'
   const canalCommissionId = (formData.get('canal_commission_id') as string) || null
@@ -52,6 +54,8 @@ export async function creerCommunique(formData: FormData) {
       author_id: profile.id,
       title,
       content,
+      date_evenement: dateEvenement,
+      lieu_evenement: lieuEvenement,
       canal_public: canalPublic,
       canal_bureau: canalBureau,
       canal_commission_id: canalCommissionId,

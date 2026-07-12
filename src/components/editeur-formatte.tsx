@@ -1,7 +1,39 @@
 'use client'
 
-import { useRef, useState } from 'react'
-import ContenuFormatte from '@/components/contenu-formatte'
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import TextAlign from '@tiptap/extension-text-align'
+import Placeholder from '@tiptap/extension-placeholder'
+import Link from '@tiptap/extension-link'
+import { useState } from 'react'
+
+function BoutonBarre({
+  actif,
+  desactive,
+  titre,
+  onClick,
+  children,
+}: {
+  actif?: boolean
+  desactive?: boolean
+  titre: string
+  onClick: () => void
+  children: React.ReactNode
+}) {
+  return (
+    <button
+      type="button"
+      title={titre}
+      disabled={desactive}
+      onClick={onClick}
+      className={`flex h-7 min-w-7 items-center justify-center rounded px-1 text-sm transition-colors disabled:opacity-30 ${
+        actif ? 'bg-primaire text-white' : 'text-encre/80 hover:bg-white'
+      }`}
+    >
+      {children}
+    </button>
+  )
+}
 
 export default function EditeurFormatte({
   name,
@@ -16,99 +48,117 @@ export default function EditeurFormatte({
   rows?: number
   required?: boolean
 }) {
-  const ref = useRef<HTMLTextAreaElement>(null)
-  const [valeur, setValeur] = useState(defaultValue ?? '')
-  const [ongletApercu, setOngletApercu] = useState(false)
+  const [html, setHtml] = useState(defaultValue ?? '')
 
-  function inserer(avant: string, apres: string = '') {
-    const textarea = ref.current
-    if (!textarea) return
+  const editor = useEditor({
+    immediatelyRender: false,
+    extensions: [
+      StarterKit.configure({ link: false }),
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      Link.configure({ openOnClick: false, autolink: true }),
+      Placeholder.configure({ placeholder: placeholder ?? '' }),
+    ],
+    content: defaultValue ?? '',
+    editorProps: {
+      attributes: { class: 'contenu-riche focus:outline-none' },
+    },
+    onUpdate: ({ editor }) => setHtml(editor.getHTML()),
+  })
 
-    const debut = textarea.selectionStart
-    const fin = textarea.selectionEnd
-    const texte = textarea.value
-    const selection = texte.slice(debut, fin)
-
-    const nouveauTexte = texte.slice(0, debut) + avant + selection + apres + texte.slice(fin)
-    setValeur(nouveauTexte)
-    textarea.focus()
-
-    requestAnimationFrame(() => {
-      const nouvellePosition = debut + avant.length + selection.length + apres.length
-      textarea.setSelectionRange(nouvellePosition, nouvellePosition)
-    })
+  if (!editor) {
+    return (
+      <div className="overflow-hidden rounded-lg border border-[#D1D9E0]">
+        <div style={{ minHeight: `${rows * 1.6}rem` }} className="p-3 text-sm text-encre/40">Chargement de l'éditeur...</div>
+      </div>
+    )
   }
 
-  const boutons = [
-    { label: 'Titre', avant: '## ', apres: '', icone: <span className="font-display text-sm font-semibold">H</span> },
-    { label: 'Gras', avant: '**', apres: '**', icone: <span className="font-semibold">G</span> },
-    { label: 'Italique', avant: '*', apres: '*', icone: <span className="italic">I</span> },
-    { label: 'Citation', avant: '> ', apres: '', icone: <span className="text-base leading-none">”</span> },
-    { label: 'Liste à puces', avant: '- ', apres: '', icone: <span className="text-base leading-none">•</span> },
-    { label: 'Liste numérotée', avant: '1. ', apres: '', icone: <span className="text-xs font-medium">1.</span> },
-    { label: 'Lien', avant: '[texte](', apres: 'https://)', icone: <span className="text-sm">🔗</span> },
-  ]
+  function definirLien() {
+    const url = window.prompt('Adresse du lien (https://...)', editor!.getAttributes('link').href ?? 'https://')
+    if (url === null) return
+    if (url === '') {
+      editor!.chain().focus().extendMarkRange('link').unsetLink().run()
+      return
+    }
+    editor!.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+  }
 
   return (
     <div className="overflow-hidden rounded-lg border border-[#D1D9E0]">
       <div className="flex flex-wrap items-center gap-1 border-b border-[#D1D9E0] bg-fond-clair p-1.5">
-        {boutons.map((b) => (
-          <button
-            key={b.label}
-            type="button"
-            title={b.label}
-            disabled={ongletApercu}
-            onClick={() => inserer(b.avant, b.apres)}
-            className="flex h-7 w-7 items-center justify-center rounded text-encre/80 hover:bg-white disabled:opacity-30"
-          >
-            {b.icone}
-          </button>
-        ))}
+        <select
+          value={
+            editor.isActive('heading', { level: 1 }) ? '1'
+            : editor.isActive('heading', { level: 2 }) ? '2'
+            : editor.isActive('heading', { level: 3 }) ? '3'
+            : 'p'
+          }
+          onChange={(e) => {
+            const v = e.target.value
+            if (v === 'p') editor.chain().focus().setParagraph().run()
+            else editor.chain().focus().toggleHeading({ level: Number(v) as 1 | 2 | 3 }).run()
+          }}
+          className="h-7 rounded border-0 bg-white px-1 text-xs text-encre/80"
+        >
+          <option value="p">Texte normal</option>
+          <option value="1">Titre 1</option>
+          <option value="2">Titre 2</option>
+          <option value="3">Titre 3</option>
+        </select>
 
-        <div className="ml-auto flex items-center gap-1 rounded-md bg-white/70 p-0.5">
-          <button
-            type="button"
-            onClick={() => setOngletApercu(false)}
-            className={`rounded px-2 py-1 text-xs font-medium transition-colors ${!ongletApercu ? 'bg-primaire text-white' : 'text-encre/60 hover:text-encre'}`}
-          >
-            Écrire
-          </button>
-          <button
-            type="button"
-            onClick={() => setOngletApercu(true)}
-            className={`rounded px-2 py-1 text-xs font-medium transition-colors ${ongletApercu ? 'bg-primaire text-white' : 'text-encre/60 hover:text-encre'}`}
-          >
-            Aperçu
-          </button>
-        </div>
+        <span className="mx-1 h-5 w-px bg-black/10" />
+
+        <BoutonBarre titre="Gras" actif={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()}>
+          <span className="font-semibold">G</span>
+        </BoutonBarre>
+        <BoutonBarre titre="Italique" actif={editor.isActive('italic')} onClick={() => editor.chain().focus().toggleItalic().run()}>
+          <span className="italic">I</span>
+        </BoutonBarre>
+
+        <span className="mx-1 h-5 w-px bg-black/10" />
+
+        <BoutonBarre titre="Aligner à gauche" actif={editor.isActive({ textAlign: 'left' })} onClick={() => editor.chain().focus().setTextAlign('left').run()}>
+          ⬅
+        </BoutonBarre>
+        <BoutonBarre titre="Centrer" actif={editor.isActive({ textAlign: 'center' })} onClick={() => editor.chain().focus().setTextAlign('center').run()}>
+          ↔
+        </BoutonBarre>
+        <BoutonBarre titre="Justifier" actif={editor.isActive({ textAlign: 'justify' })} onClick={() => editor.chain().focus().setTextAlign('justify').run()}>
+          ≡
+        </BoutonBarre>
+
+        <span className="mx-1 h-5 w-px bg-black/10" />
+
+        <BoutonBarre titre="Liste à puces" actif={editor.isActive('bulletList')} onClick={() => editor.chain().focus().toggleBulletList().run()}>
+          •
+        </BoutonBarre>
+        <BoutonBarre titre="Liste numérotée" actif={editor.isActive('orderedList')} onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+          1.
+        </BoutonBarre>
+        <BoutonBarre titre="Citation" actif={editor.isActive('blockquote')} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
+          ”
+        </BoutonBarre>
+        <BoutonBarre titre="Ligne de séparation" onClick={() => editor.chain().focus().setHorizontalRule().run()}>
+          ―
+        </BoutonBarre>
+        <BoutonBarre titre="Lien" actif={editor.isActive('link')} onClick={definirLien}>
+          🔗
+        </BoutonBarre>
       </div>
 
-      {ongletApercu && (
-        <div className="p-3" style={{ minHeight: `${rows * 1.6}rem` }}>
-          {valeur.trim() ? (
-            <ContenuFormatte texte={valeur} />
-          ) : (
-            <p className="text-sm text-encre/40">Rien à prévisualiser pour l'instant.</p>
-          )}
-        </div>
-      )}
-      {/* Le textarea reste monté même sous l'aperçu : sinon son contenu disparaît de l'envoi du formulaire */}
-      <textarea
-        ref={ref}
-        name={name}
-        value={valeur}
-        onChange={(e) => setValeur(e.target.value)}
-        placeholder={placeholder}
-        rows={rows}
-        required={required}
-        className={`w-full border-0 p-2 text-encre focus:outline-none focus:ring-1 focus:ring-primaire ${ongletApercu ? 'hidden' : ''}`}
-      />
+      <EditorContent editor={editor} style={{ minHeight: `${rows * 1.6}rem` }} className="p-3" />
 
-      {!ongletApercu && (
-        <p className="border-t border-[#D1D9E0] bg-fond-clair/50 px-2 py-1 text-[11px] text-encre/40">
-          Markdown supporté — utilise les boutons ci-dessus ou l'onglet Aperçu pour vérifier le rendu final.
-        </p>
-      )}
+      {/* Champ réellement soumis avec le formulaire : masqué visuellement mais toujours
+          validable (contrairement à display:none / type=hidden, exclus de la validation native). */}
+      <textarea
+        name={name}
+        value={html}
+        required={required}
+        readOnly
+        tabIndex={-1}
+        aria-hidden="true"
+        className="sr-only"
+      />
     </div>
   )
 }

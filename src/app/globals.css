@@ -179,10 +179,14 @@ select:focus-visible,
   }
 
   /* Forme signature des blocs d'information : coin adouci asymétrique plutôt qu'un
-     rectangle arrondi générique, pour donner une identité visuelle propre au site. */
+     rectangle arrondi générique, pour donner une identité visuelle propre au site.
+     La lisière est une vraie bordure gauche (pas un rectangle plaqué en ::before) :
+     elle épouse donc naturellement les coins arrondis du cadre. */
   .carte-interactive,
   .cadre {
     border-radius: 22px 22px 22px 6px !important;
+    border-left-width: 3px !important;
+    border-left-color: var(--couleur-primaire) !important;
   }
 
   /* Cartes cliquables réactives au survol (voir section 3.3 des instructions design) */
@@ -197,21 +201,6 @@ select:focus-visible,
     }
   }
 
-  /* Bloc d'information statique (non cliquable) : même forme signature, sans survol */
-  .cadre {
-    position: relative;
-  }
-  .cadre::before {
-    content: '';
-    position: absolute;
-    top: 18px;
-    bottom: 18px;
-    left: 0;
-    width: 3px;
-    border-radius: 0 3px 3px 0;
-    background: linear-gradient(180deg, var(--couleur-primaire), var(--couleur-primaire-fonce));
-    opacity: 0.55;
-  }
 
   /* Bouton d'envoi en forme de flèche (voir messagerie) */
   .bouton-fleche {
@@ -236,6 +225,84 @@ select:focus-visible,
   .bouton-fleche:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  /* Rendu typographique partagé entre l'éditeur riche (Tiptap) et l'affichage final
+     (ContenuFormatte) : le rendu WYSIWYG à la rédaction correspond exactement à la
+     mise en forme publiée. */
+  .contenu-riche {
+    color: var(--couleur-encre);
+    line-height: 1.65;
+  }
+  .contenu-riche p {
+    margin: 0.6rem 0;
+  }
+  .contenu-riche h1 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--couleur-primaire);
+    margin: 1.1rem 0 0.5rem;
+  }
+  .contenu-riche h2 {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--couleur-primaire);
+    margin: 1rem 0 0.5rem;
+  }
+  .contenu-riche h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--couleur-primaire);
+    margin: 0.9rem 0 0.4rem;
+  }
+  .contenu-riche strong {
+    font-weight: 600;
+    color: var(--couleur-encre);
+  }
+  .contenu-riche em {
+    font-style: italic;
+  }
+  .contenu-riche ul {
+    list-style: disc;
+    padding-left: 1.4rem;
+    margin: 0.6rem 0;
+  }
+  .contenu-riche ol {
+    list-style: decimal;
+    padding-left: 1.4rem;
+    margin: 0.6rem 0;
+  }
+  .contenu-riche li {
+    margin: 0.25rem 0;
+  }
+  .contenu-riche li p {
+    margin: 0;
+  }
+  .contenu-riche blockquote {
+    border-left: 3px solid var(--couleur-primaire);
+    padding-left: 1rem;
+    margin: 0.75rem 0;
+    font-style: italic;
+    color: rgb(22 35 63 / 0.7);
+  }
+  .contenu-riche a {
+    color: var(--couleur-primaire);
+    text-decoration: underline;
+  }
+  .contenu-riche hr {
+    border: none;
+    border-top: 1px solid #D1D9E0;
+    margin: 1.25rem 0;
+  }
+  .contenu-riche p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    color: #9AA3B2;
+    pointer-events: none;
   }
 
   /* Apparition au défilement (voir section 3.2) : classes pilotées par le composant Reveal.

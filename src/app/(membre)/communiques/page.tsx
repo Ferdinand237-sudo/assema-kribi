@@ -12,7 +12,7 @@ export default async function PageCommuniques() {
 
   const { data: communiques } = await supabase
     .from('communiques')
-    .select('id, title, content, created_at, canal_public, canal_bureau, commissions(nom), communique_destinataires(id, profile_id, read)')
+    .select('id, title, content, created_at, date_evenement, lieu_evenement, canal_public, canal_bureau, commissions(nom), communique_destinataires(id, profile_id, read)')
     .order('created_at', { ascending: false })
 
   return (
@@ -37,6 +37,14 @@ export default async function PageCommuniques() {
             >
               <p className="font-mono text-xs uppercase tracking-wide text-primaire">{source}</p>
               <h3 className="font-semibold text-encre">{c.title}</h3>
+              {(c.date_evenement || c.lieu_evenement) && (
+                <p className="mt-1 mb-1 inline-flex flex-wrap items-center gap-x-3 gap-y-0.5 rounded-md bg-fond-clair px-2.5 py-1.5 text-xs font-medium text-primaire">
+                  {c.date_evenement && (
+                    <span>📅 {new Date(c.date_evenement).toLocaleString('fr-FR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}</span>
+                  )}
+                  {c.lieu_evenement && <span>📍 {c.lieu_evenement}</span>}
+                </p>
+              )}
               <ContenuFormatte texte={c.content} />
               <p className="mt-1 text-xs text-encre/50">{new Date(c.created_at).toLocaleDateString('fr-FR')}</p>
 

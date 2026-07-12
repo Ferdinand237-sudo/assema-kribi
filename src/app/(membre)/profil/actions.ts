@@ -14,6 +14,14 @@ export async function mettreAJourProfil(formData: FormData) {
     .map((c) => c.trim())
     .filter(Boolean)
 
+  const reseauxSociaux = {
+    facebook: (formData.get('facebook') as string) || null,
+    linkedin: (formData.get('linkedin') as string) || null,
+    x: (formData.get('x') as string) || null,
+    email: (formData.get('email_public') as string) || null,
+    whatsapp: (formData.get('whatsapp') as string) || null,
+  }
+
   // Infos du profil
   const { error: erreurProfil } = await supabase
     .from('profiles')
@@ -27,6 +35,7 @@ export async function mettreAJourProfil(formData: FormData) {
       bio: formData.get('bio') as string,
       telephone: formData.get('telephone') as string,
       competences: competences.length > 0 ? competences : null,
+      reseaux_sociaux: reseauxSociaux,
       allow_messages: formData.get('allow_messages') === 'on',
     })
     .eq('id', user.id)

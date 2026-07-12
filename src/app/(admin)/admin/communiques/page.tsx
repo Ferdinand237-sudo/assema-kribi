@@ -1,6 +1,7 @@
 import { requireAdminOuPresident } from '@/lib/auth/guards'
 import { creerCommunique } from './actions'
 import EditeurFormatte from '@/components/editeur-formatte'
+import BoutonEnvoi from '@/components/bouton-envoi'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,7 +12,7 @@ export default async function PageAdminCommuniques() {
     supabase.from('commissions').select('id, nom'),
     supabase
       .from('communiques')
-      .select('id, title, canal_public, canal_bureau, canal_groupe_cible, created_at, commissions(nom), communique_destinataires(id)')
+      .select('id, title, canal_public, canal_bureau, canal_groupe_cible, created_at, date_evenement, lieu_evenement, commissions(nom), communique_destinataires(id)')
       .order('created_at', { ascending: false }),
   ])
 
@@ -23,6 +24,22 @@ export default async function PageAdminCommuniques() {
         <h2 className="font-semibold text-encre">Nouveau communiqué</h2>
         <input name="title" placeholder="Titre" required className="champ" />
         <EditeurFormatte name="content" placeholder="Contenu" rows={5} required />
+
+        <div className="space-y-2 border-t border-black/10 pt-3">
+          <p className="text-sm font-medium text-encre">Rencontre liée (optionnel)</p>
+          <p className="text-xs text-encre/60">Si ce communiqué annonce un évènement, indique la date et le lieu pour qu'ils soient bien visibles.</p>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div>
+              <label className="mb-1 block text-xs text-encre/60">Date de l'évènement</label>
+              <input name="date_evenement" type="datetime-local" className="champ" />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs text-encre/60">Lieu</label>
+              <input name="lieu_evenement" placeholder="ex : Salle des fêtes de Kribi" className="champ" />
+            </div>
+          </div>
+        </div>
+
         <div className="space-y-2 border-t border-black/10 pt-3">
           <p className="text-sm font-medium text-encre">Canaux de diffusion (cumulables)</p>
 
@@ -60,9 +77,7 @@ export default async function PageAdminCommuniques() {
           </div>
         </div>
 
-        <button type="submit" className="bouton bouton-primaire">
-          Envoyer
-        </button>
+        <BoutonEnvoi texteEnvoi="Envoi en cours...">Envoyer</BoutonEnvoi>
       </form>
 
       <h2 className="mb-3 font-semibold text-encre">Historique</h2>
@@ -79,6 +94,13 @@ export default async function PageAdminCommuniques() {
                 c.canal_groupe_cible && `Groupe ciblé (${c.communique_destinataires?.length ?? 0} destinataires)`,
               ].filter(Boolean).join(' · ')}
             </p>
+            {(c.date_evenement || c.lieu_evenement) && (
+              <p className="mt-1 text-xs font-medium text-primaire">
+                📅 {c.date_evenement && new Date(c.date_evenement).toLocaleString('fr-FR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
+                {c.date_evenement && c.lieu_evenement && ' · '}
+                {c.lieu_evenement && `📍 ${c.lieu_evenement}`}
+              </p>
+            )}
           </div>
         ))}
         {(!communiques || communiques.length === 0) && (

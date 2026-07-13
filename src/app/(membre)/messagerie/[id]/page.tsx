@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import { envoyerMessage } from '../actions'
 import ZoomableImage from '@/components/zoomable-image'
-import BoutonEnvoiFleche from '@/components/bouton-envoi-fleche'
+import MessagerieFil from '@/components/messagerie-fil'
 
 export const dynamic = 'force-dynamic'
 
@@ -59,45 +59,36 @@ export default async function PageConversation({
           </p>
         )}
 
-        <div className="min-h-0 flex-1 space-y-3 overflow-y-auto py-3">
-          {messages?.map((m) => {
-            const estMoi = m.sender_id === user.id
-            return (
-              <div key={m.id} className={`flex ${estMoi ? 'justify-end' : 'justify-start'}`}>
-                <div
-                  className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
-                    estMoi ? 'rounded-br-md bg-primaire text-white' : 'rounded-bl-md bg-white text-encre'
-                  }`}
-                >
-                  <p className="whitespace-pre-wrap break-words">{m.content}</p>
-                  <p className={`mt-1 text-right font-mono text-[10px] ${estMoi ? 'text-white/60' : 'text-encre/35'}`}>
-                    {new Date(m.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-                  </p>
-                </div>
-              </div>
-            )
-          })}
-          {(!messages || messages.length === 0) && (
-            <p className="text-sm text-encre/60">Aucun message pour l'instant. Lance la conversation !</p>
-          )}
-        </div>
-
         {autreProfil.allow_messages ? (
-          <form action={envoyerMessage} className="flex items-end gap-2 border-t border-black/10 pt-3">
-            <input type="hidden" name="receiverId" value={autreId} />
-            <textarea
-              name="content"
-              placeholder="Écris ton message... (retour à la ligne autorisé)"
-              required
-              rows={2}
-              className="champ max-h-32 flex-1 resize-none"
-            />
-            <BoutonEnvoiFleche />
-          </form>
+          <MessagerieFil messages={messages ?? []} userId={user.id} autreId={autreId} envoyerMessage={envoyerMessage} />
         ) : (
-          <p className="border-t border-black/10 pt-3 text-sm text-encre/60">
-            Ce membre n'accepte pas les messages privés.
-          </p>
+          <>
+            <div className="min-h-0 flex-1 space-y-3 overflow-y-auto py-3">
+              {messages?.map((m) => {
+                const estMoi = m.sender_id === user.id
+                return (
+                  <div key={m.id} className={`flex ${estMoi ? 'justify-end' : 'justify-start'}`}>
+                    <div
+                      className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
+                        estMoi ? 'rounded-br-md bg-primaire text-white' : 'rounded-bl-md bg-white text-encre'
+                      }`}
+                    >
+                      <p className="whitespace-pre-wrap break-words">{m.content}</p>
+                      <p className={`mt-1 text-right font-mono text-[10px] ${estMoi ? 'text-white/60' : 'text-encre/35'}`}>
+                        {new Date(m.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
+                  </div>
+                )
+              })}
+              {(!messages || messages.length === 0) && (
+                <p className="text-sm text-encre/60">Aucun message pour l'instant. Lance la conversation !</p>
+              )}
+            </div>
+            <p className="border-t border-black/10 pt-3 text-sm text-encre/60">
+              Ce membre n'accepte pas les messages privés.
+            </p>
+          </>
         )}
       </div>
     </div>

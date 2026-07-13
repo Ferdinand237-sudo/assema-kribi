@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import Reveal from '@/components/reveal'
 import ZoomableImage from '@/components/zoomable-image'
+import { extraireTexte } from '@/lib/texte'
 
 export const dynamic = 'force-dynamic'
 
@@ -47,7 +48,7 @@ export default async function PageFiguresMabi() {
                     )}
                   </div>
                 </div>
-                {f.biographie && <p className="mt-3 line-clamp-2 text-sm text-encre/70">{f.biographie}</p>}
+                {f.biographie && <p className="mt-3 line-clamp-2 text-sm text-encre/70">{extraireTexte(f.biographie, 160)}</p>}
                 <p className="mt-2 text-xs font-medium text-primaire">Voir la biographie →</p>
               </a>
             </Reveal>

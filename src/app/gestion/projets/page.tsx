@@ -2,6 +2,7 @@ import { requireModuleManager } from '@/lib/auth/guards'
 import { creerProjet, ajouterMediasProjet, supprimerMediaProjet, supprimerProjet } from './actions'
 import EditeurFormatte from '@/components/editeur-formatte'
 import BoutonConfirmation from '@/components/bouton-confirmation'
+import { extraireTexte } from '@/lib/texte'
 
 export const dynamic = 'force-dynamic'
 
@@ -46,8 +47,8 @@ export default async function PageGestionProjets() {
                 </form>
               </div>
             </div>
-            {p.description && <p className="mb-1 text-sm text-encre/70">{p.description}</p>}
-            {p.resultats && <p className="mb-3 text-xs text-encre/60">Résultats : {p.resultats}</p>}
+            {p.description && <p className="mb-1 text-sm text-encre/70">{extraireTexte(p.description, 200)}</p>}
+            {p.resultats && <p className="mb-3 text-xs text-encre/60">Résultats : {extraireTexte(p.resultats, 200)}</p>}
 
             {(p.projet_medias ?? []).length > 0 && (
               <div className="mb-3 grid grid-cols-4 gap-2 sm:grid-cols-6">

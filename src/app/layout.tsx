@@ -25,7 +25,7 @@ const plexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: "ASSEMA Kribi",
-  description: "Association des Étudiants Mabi de Kribi — plateforme communautaire",
+  description: "Association des Étudiants Mabi — plateforme communautaire",
 };
 
 export default function RootLayout({

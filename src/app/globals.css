@@ -297,6 +297,16 @@ select:focus-visible,
     border-top: 1px solid #D1D9E0;
     margin: 1.25rem 0;
   }
+  .contenu-riche img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin: 1rem 0;
+    display: block;
+  }
+  .contenu-riche img.ProseMirror-selectednode {
+    outline: 2px solid var(--couleur-primaire);
+  }
   .contenu-riche p.is-editor-empty:first-child::before {
     content: attr(data-placeholder);
     float: left;

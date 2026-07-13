@@ -60,6 +60,29 @@ export async function modifierArticle(formData: FormData) {
   redirect('/redaction')
 }
 
+export async function uploaderImageContenu(formData: FormData): Promise<{ url: string } | { erreur: string }> {
+  const { supabase, profile } = await requireRedacteur()
+
+  const fichier = formData.get('image') as File
+  if (!fichier || fichier.size === 0) {
+    return { erreur: 'Aucune image reçue.' }
+  }
+
+  const extension = fichier.name.split('.').pop()
+  const chemin = `${profile.id}/${crypto.randomUUID()}.${extension}`
+
+  const { error } = await supabase.storage
+    .from('articles-media')
+    .upload(chemin, fichier, { contentType: fichier.type })
+
+  if (error) {
+    return { erreur: "Échec de l'envoi de l'image." }
+  }
+
+  const { data } = supabase.storage.from('articles-media').getPublicUrl(chemin)
+  return { url: data.publicUrl }
+}
+
 export async function supprimerArticle(formData: FormData) {
   const { supabase, profile } = await requireRedacteur()
 

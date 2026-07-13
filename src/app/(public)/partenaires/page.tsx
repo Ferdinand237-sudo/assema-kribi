@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import Reveal from '@/components/reveal'
 import ZoomableImage from '@/components/zoomable-image'
+import { extraireTexte } from '@/lib/texte'
 
 export const dynamic = 'force-dynamic'
 
@@ -58,7 +59,7 @@ export default async function PagePartenaires() {
                 <div className="min-w-0">
                   <p className="font-mono text-xs uppercase tracking-wide text-primaire">{a.partenaires?.nom}</p>
                   <h3 className="font-semibold text-encre">{a.title}</h3>
-                  <p className="mt-1 line-clamp-2 text-sm text-encre/70">{a.content}</p>
+                  <p className="mt-1 line-clamp-2 text-sm text-encre/70">{extraireTexte(a.content, 160)}</p>
                   <p className="mt-2 text-xs font-medium text-primaire">Lire l'article →</p>
                 </div>
               </a>

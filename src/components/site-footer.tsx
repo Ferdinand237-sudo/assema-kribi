@@ -16,7 +16,7 @@ export default async function SiteFooter() {
             <span className="font-display text-lg font-semibold text-white">ASSEMA</span>
           </a>
           <p className="mt-3 text-sm text-white/60">
-            Association des Étudiants Mabi de Kribi — un espace communautaire pour connecter, valoriser
+            Association des Étudiants Mabi — un espace communautaire pour connecter, valoriser
             et faire grandir les étudiants Mabi, à Kribi comme dans la diaspora.
           </p>
         </div>
@@ -45,8 +45,12 @@ export default async function SiteFooter() {
         </div>
       </div>
 
-      <div className="border-t border-white/10 px-6 py-4 text-center text-xs text-white/40">
-        © {new Date().getFullYear()} ASSEMA Kribi. Tous droits réservés.
+      <div className="flex flex-col items-center gap-2 border-t border-white/10 px-6 py-4 text-center text-xs text-white/40 sm:flex-row sm:justify-between">
+        <p>© {new Date().getFullYear()} ASSEMA Kribi. Tous droits réservés.</p>
+        <div className="flex gap-4">
+          <a href="/confidentialite" className="transition-colors hover:text-primaire">Confidentialité & propriétés</a>
+          <a href="/conditions-utilisation" className="transition-colors hover:text-primaire">Conditions d'utilisation</a>
+        </div>
       </div>
     </footer>
   )

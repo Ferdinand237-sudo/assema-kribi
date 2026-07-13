@@ -5,11 +5,11 @@ import remarkGfm from 'remark-gfm'
 // Détecte si le contenu a été rédigé avec le nouvel éditeur riche (HTML) plutôt
 // qu'avec l'ancien éditeur markdown (contenu déjà en base avant la mise à jour).
 function estDuHtml(texte: string) {
-  return /<\/?(p|h[1-6]|ul|ol|li|blockquote|strong|em|a|hr)[ >]/i.test(texte)
+  return /<\/?(p|h[1-6]|ul|ol|li|blockquote|strong|em|a|hr|img)[ >]/i.test(texte)
 }
 
-const BALISES_AUTORISEES = ['p', 'br', 'strong', 'em', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'blockquote', 'a', 'hr']
-const ATTRIBUTS_AUTORISES = { a: ['href', 'target', 'rel'], '*': ['style'] }
+const BALISES_AUTORISEES = ['p', 'br', 'strong', 'em', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'blockquote', 'a', 'hr', 'img']
+const ATTRIBUTS_AUTORISES = { a: ['href', 'target', 'rel'], img: ['src', 'alt'], '*': ['style'] }
 
 export default function ContenuFormatte({ texte }: { texte: string }) {
   if (estDuHtml(texte)) {

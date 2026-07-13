@@ -5,7 +5,8 @@ import StarterKit from '@tiptap/starter-kit'
 import TextAlign from '@tiptap/extension-text-align'
 import Placeholder from '@tiptap/extension-placeholder'
 import Link from '@tiptap/extension-link'
-import { useState } from 'react'
+import Image from '@tiptap/extension-image'
+import { useRef, useState } from 'react'
 
 function BoutonBarre({
   actif,
@@ -41,14 +42,18 @@ export default function EditeurFormatte({
   placeholder,
   rows = 6,
   required = false,
+  televerserImage,
 }: {
   name: string
   defaultValue?: string
   placeholder?: string
   rows?: number
   required?: boolean
+  televerserImage?: (formData: FormData) => Promise<{ url: string } | { erreur: string }>
 }) {
   const [html, setHtml] = useState(defaultValue ?? '')
+  const [envoiImageEnCours, setEnvoiImageEnCours] = useState(false)
+  const entreeFichierRef = useRef<HTMLInputElement>(null)
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -56,6 +61,7 @@ export default function EditeurFormatte({
       StarterKit.configure({ link: false }),
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       Link.configure({ openOnClick: false, autolink: true }),
+      Image,
       Placeholder.configure({ placeholder: placeholder ?? '' }),
     ],
     content: defaultValue ?? '',
@@ -81,6 +87,25 @@ export default function EditeurFormatte({
       return
     }
     editor!.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+  }
+
+  async function gererSelectionImage(e: React.ChangeEvent<HTMLInputElement>) {
+    const fichier = e.target.files?.[0]
+    e.target.value = ''
+    if (!fichier || !televerserImage) return
+
+    const donnees = new FormData()
+    donnees.append('image', fichier)
+
+    setEnvoiImageEnCours(true)
+    const resultat = await televerserImage(donnees)
+    setEnvoiImageEnCours(false)
+
+    if ('url' in resultat) {
+      editor!.chain().focus().setImage({ src: resultat.url }).run()
+    } else {
+      window.alert(resultat.erreur)
+    }
   }
 
   return (
@@ -144,6 +169,26 @@ export default function EditeurFormatte({
         <BoutonBarre titre="Lien" actif={editor.isActive('link')} onClick={definirLien}>
           🔗
         </BoutonBarre>
+
+        {televerserImage && (
+          <>
+            <span className="mx-1 h-5 w-px bg-black/10" />
+            <BoutonBarre
+              titre="Insérer une image"
+              desactive={envoiImageEnCours}
+              onClick={() => entreeFichierRef.current?.click()}
+            >
+              {envoiImageEnCours ? '…' : '🖼️'}
+            </BoutonBarre>
+            <input
+              ref={entreeFichierRef}
+              type="file"
+              accept="image/*"
+              onChange={gererSelectionImage}
+              className="hidden"
+            />
+          </>
+        )}
       </div>
 
       <EditorContent editor={editor} style={{ minHeight: `${rows * 1.6}rem` }} className="p-3" />

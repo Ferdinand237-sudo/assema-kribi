@@ -112,7 +112,7 @@ export default async function PageAccueil() {
     <div>
       <section className="bg-primaire px-6 py-20 text-center text-white">
         <h1 className="arrivee-douce font-display text-4xl font-semibold sm:text-5xl">
-          Association des Étudiants Mabi de Kribi
+          Association des Étudiants Mabi
         </h1>
         <p className="arrivee-douce mx-auto mt-4 max-w-xl text-white/90" style={{ animationDelay: '120ms' }}>
           Un espace communautaire pour connecter, valoriser et faire grandir les étudiants Mabi — à Kribi comme dans la diaspora.

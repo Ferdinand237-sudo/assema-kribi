@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { envoyerMessageContact } from './actions'
+import ContenuFormatte from '@/components/contenu-formatte'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,13 +12,13 @@ export default async function PageContact({
   const { succes, erreur } = await searchParams
   const supabase = await createClient()
   const { data } = await supabase.from('pages_contenu').select('contenu').eq('slug', 'contact').single()
-  const c = data?.contenu ?? {}
+  const c = (data?.contenu ?? {}) as Record<string, string>
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-12">
-      <h1 className="mb-6 font-display text-3xl font-semibold text-encre">Contact</h1>
+      <h1 className="mb-6 text-center font-display text-3xl font-semibold text-encre">Contact</h1>
 
-      {c.intro && <p className="mb-6 text-encre/80">{c.intro}</p>}
+      {c.intro && <div className="mb-6 text-justify"><ContenuFormatte texte={c.intro} /></div>}
 
       <div className="mb-8 text-sm text-encre/80">
         {c.adresse && <p><strong>Adresse :</strong> {c.adresse}</p>}

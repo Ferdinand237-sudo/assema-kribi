@@ -1,6 +1,6 @@
 'use server'
 
-import { requireAdmin, requireAdminOuPresident } from '@/lib/auth/guards'
+import { requireAdminOuPresident } from '@/lib/auth/guards'
 import { revalidatePath } from 'next/cache'
 
 export async function mettreAJourAPropos(formData: FormData) {
@@ -39,4 +39,32 @@ export async function mettreAJourContact(formData: FormData) {
 
   revalidatePath('/admin/contenu-pages')
   revalidatePath('/contact')
+}
+
+export async function mettreAJourConfidentialite(formData: FormData) {
+  const { supabase, profile } = await requireAdminOuPresident()
+
+  const contenu = { contenu: formData.get('contenu') as string }
+
+  await supabase
+    .from('pages_contenu')
+    .update({ contenu, updated_by: profile.id, updated_at: new Date().toISOString() })
+    .eq('slug', 'confidentialite')
+
+  revalidatePath('/admin/contenu-pages')
+  revalidatePath('/confidentialite')
+}
+
+export async function mettreAJourConditionsUtilisation(formData: FormData) {
+  const { supabase, profile } = await requireAdminOuPresident()
+
+  const contenu = { contenu: formData.get('contenu') as string }
+
+  await supabase
+    .from('pages_contenu')
+    .update({ contenu, updated_by: profile.id, updated_at: new Date().toISOString() })
+    .eq('slug', 'conditions-utilisation')
+
+  revalidatePath('/admin/contenu-pages')
+  revalidatePath('/conditions-utilisation')
 }

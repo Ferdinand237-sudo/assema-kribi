@@ -1,5 +1,5 @@
 import { requireRedacteur } from '@/lib/auth/guards'
-import { creerArticle, supprimerArticle } from './actions'
+import { creerArticle, supprimerArticle, uploaderImageContenu } from './actions'
 import EditeurFormatte from '@/components/editeur-formatte'
 import BoutonEnvoi from '@/components/bouton-envoi'
 import BoutonConfirmation from '@/components/bouton-confirmation'
@@ -71,7 +71,7 @@ export default async function PageRedaction() {
         ))}
 
         <input name="title" placeholder="Titre" required className="champ" />
-        <EditeurFormatte name="content" placeholder="Contenu de l'article" required />
+        <EditeurFormatte name="content" placeholder="Contenu de l'article" required televerserImage={uploaderImageContenu} />
         <div className="flex flex-wrap gap-2">
           <BoutonEnvoi name="_action" value="brouillon" className="bouton bouton-secondaire" texteEnvoi="Enregistrement...">
             Enregistrer en brouillon

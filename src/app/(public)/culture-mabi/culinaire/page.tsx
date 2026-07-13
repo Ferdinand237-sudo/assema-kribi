@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import Reveal from '@/components/reveal'
 import ZoomableImage from '@/components/zoomable-image'
+import { extraireTexte } from '@/lib/texte'
 
 export const dynamic = 'force-dynamic'
 
@@ -31,7 +32,7 @@ export default async function PageArtsCulinaires() {
                   <p className="mb-2 font-mono text-xs text-encre/50">
                     Par {a.profiles?.first_name} {a.profiles?.last_name} — {new Date(a.published_at).toLocaleDateString('fr-FR')}
                   </p>
-                  <p className="line-clamp-2 text-sm text-encre/70">{a.content}</p>
+                  <p className="line-clamp-2 text-sm text-encre/70">{extraireTexte(a.content, 160)}</p>
                   <p className="mt-2 text-xs font-medium text-primaire">Lire l'article →</p>
                 </div>
               </a>

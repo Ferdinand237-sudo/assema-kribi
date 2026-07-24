@@ -2,7 +2,9 @@
 
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
+import { usePathname } from 'next/navigation'
 import { deconnecter } from '@/app/(auth)/actions'
+import { estLienActif } from './nav-link'
 
 type Lien = { href: string; label: string; badge?: number }
 
@@ -23,6 +25,7 @@ export default function MenuMobile({
 }) {
   const [ouvert, setOuvert] = useState(false)
   const [sousMenuOuvert, setSousMenuOuvert] = useState<'informations' | 'gestion' | null>(null)
+  const pathname = usePathname()
 
   return (
     <div className="lg:hidden">
@@ -38,7 +41,14 @@ export default function MenuMobile({
         <div className="fixed inset-0 top-[57px] z-40 overflow-y-auto bg-white p-4">
           <nav className="flex flex-col gap-1 text-sm">
             {liensPublics.map((l) => (
-              <a key={l.href} href={l.href} onClick={() => setOuvert(false)} className="rounded px-3 py-2 text-encre/85 hover:bg-fond-clair hover:text-primaire">
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setOuvert(false)}
+                className={`rounded px-3 py-2 hover:bg-fond-clair hover:text-primaire ${
+                  estLienActif(pathname, l.href) ? 'font-semibold text-primaire' : 'text-encre/85'
+                }`}
+              >
                 {l.label}
               </a>
             ))}
@@ -48,7 +58,9 @@ export default function MenuMobile({
                 <button
                   type="button"
                   onClick={() => setSousMenuOuvert(sousMenuOuvert === 'informations' ? null : 'informations')}
-                  className="flex w-full items-center justify-between rounded px-3 py-2 text-xs font-semibold uppercase text-encre/60 hover:bg-fond-clair"
+                  className={`flex w-full items-center justify-between rounded px-3 py-2 text-xs font-semibold uppercase hover:bg-fond-clair ${
+                    liensInformations.some((l) => estLienActif(pathname, l.href)) ? 'text-primaire' : 'text-encre/60'
+                  }`}
                 >
                   <span className="flex items-center gap-1.5">
                     Informations
@@ -63,7 +75,14 @@ export default function MenuMobile({
                 {sousMenuOuvert === 'informations' && (
                   <div className="flex flex-col pl-2">
                     {liensInformations.map((l) => (
-                      <a key={l.href} href={l.href} onClick={() => setOuvert(false)} className="flex items-center justify-between rounded px-3 py-2 text-encre/85 hover:bg-fond-clair hover:text-primaire">
+                      <a
+                        key={l.href}
+                        href={l.href}
+                        onClick={() => setOuvert(false)}
+                        className={`flex items-center justify-between rounded px-3 py-2 hover:bg-fond-clair hover:text-primaire ${
+                          estLienActif(pathname, l.href) ? 'font-semibold text-primaire' : 'text-encre/85'
+                        }`}
+                      >
                         {l.label}
                         {!!l.badge && <span className="pastille-vivante rounded-full bg-primaire px-2 text-xs text-white">{l.badge}</span>}
                       </a>
@@ -78,7 +97,9 @@ export default function MenuMobile({
                 <button
                   type="button"
                   onClick={() => setSousMenuOuvert(sousMenuOuvert === 'gestion' ? null : 'gestion')}
-                  className="flex w-full items-center justify-between rounded px-3 py-2 text-xs font-semibold uppercase text-encre/60 hover:bg-fond-clair"
+                  className={`flex w-full items-center justify-between rounded px-3 py-2 text-xs font-semibold uppercase hover:bg-fond-clair ${
+                    liensGestion.some((l) => estLienActif(pathname, l.href)) ? 'text-primaire' : 'text-encre/60'
+                  }`}
                 >
                   Gestion
                   <span className={`text-encre/40 transition-transform ${sousMenuOuvert === 'gestion' ? 'rotate-180' : ''}`}>▾</span>
@@ -86,7 +107,14 @@ export default function MenuMobile({
                 {sousMenuOuvert === 'gestion' && (
                   <div className="flex flex-col pl-2">
                     {liensGestion.map((l) => (
-                      <a key={l.href} href={l.href} onClick={() => setOuvert(false)} className="rounded px-3 py-2 text-encre/85 hover:bg-fond-clair hover:text-primaire">
+                      <a
+                        key={l.href}
+                        href={l.href}
+                        onClick={() => setOuvert(false)}
+                        className={`rounded px-3 py-2 hover:bg-fond-clair hover:text-primaire ${
+                          estLienActif(pathname, l.href) ? 'font-semibold text-primaire' : 'text-encre/85'
+                        }`}
+                      >
                         {l.label}
                       </a>
                     ))}

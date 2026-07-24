@@ -3,8 +3,37 @@ import { notFound } from 'next/navigation'
 import ContenuFormatte from '@/components/contenu-formatte'
 import ZoomableImage from '@/components/zoomable-image'
 import CartePosition from '@/components/carte-position'
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const { id } = await params
+  const supabase = await createClient()
+
+  const { data: village } = await supabase
+    .from('villages_mabi')
+    .select('nom, description, population_estimee')
+    .eq('id', id)
+    .single()
+
+  if (!village) return {}
+
+  const description = village.description
+    || `Le village Mabi de ${village.nom}, Kribi, Sud Cameroun${village.population_estimee ? ` (~${village.population_estimee} habitants)` : ''}. Histoire, chefferie et patrimoine.`
+  const url = `/culture-mabi/villages/${id}`
+
+  return {
+    title: `${village.nom} — Village Mabi`,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title: `${village.nom} — Village Mabi`, description, url, type: 'article' },
+  }
+}
 
 export default async function PageVillage({
   params,
@@ -36,7 +65,7 @@ export default async function PageVillage({
         <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {village.village_medias.map((m: any) => (
             <div key={m.id}>
-              <ZoomableImage src={m.url} alt={m.legende ?? ''} className="h-32 w-full rounded-lg object-cover" />
+              <ZoomableImage src={m.url} alt={m.legende || village.nom} className="h-32 w-full rounded-lg object-cover" />
               {m.legende && <p className="mt-1 text-xs text-encre/60">{m.legende}</p>}
             </div>
           ))}
@@ -61,7 +90,7 @@ export default async function PageVillage({
           <h2 className="mb-3 font-display text-xl font-semibold text-primaire">Autorité traditionnelle</h2>
           <div className="flex items-center gap-3">
             {village.chef_photo_url && (
-              <ZoomableImage src={village.chef_photo_url} alt="" className="h-16 w-16 rounded-full object-cover" />
+              <ZoomableImage src={village.chef_photo_url} alt={village.chef_nom} className="h-16 w-16 rounded-full object-cover" />
             )}
             <div>
               <p className="font-semibold text-encre">{village.chef_nom}</p>

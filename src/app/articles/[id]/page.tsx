@@ -2,6 +2,9 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import ContenuFormatte from '@/components/contenu-formatte'
 import ZoomableImage from '@/components/zoomable-image'
+import BoutonsPartage from '@/components/boutons-partage'
+import { extraireTexte } from '@/lib/texte'
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,6 +17,36 @@ const RETOUR: Record<string, { href: string; label: string }> = {
   culture_contes: { href: '/culture-mabi/contes', label: '← Contes & légendes Mabi' },
   culture_culinaire: { href: '/culture-mabi/culinaire', label: '← Arts culinaires Mabi' },
   commission: { href: '/', label: "← Retour à l'accueil" },
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const { id } = await params
+  const supabase = await createClient()
+
+  const { data: article } = await supabase
+    .from('articles')
+    .select('title, content, cover_image_url')
+    .eq('id', id)
+    .eq('status', 'published')
+    .single()
+
+  if (!article) return {}
+
+  const description = extraireTexte(article.content, 160)
+  const url = `/articles/${id}`
+  const images = article.cover_image_url ? [article.cover_image_url] : undefined
+
+  return {
+    title: article.title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title: article.title, description, url, type: 'article', images },
+    twitter: { title: article.title, description, images },
+  }
 }
 
 export default async function PageArticle({
@@ -55,6 +88,10 @@ export default async function PageArticle({
 
       <div className="text-justify">
         <ContenuFormatte texte={article.content} />
+      </div>
+
+      <div className="mt-8 border-t border-black/10 pt-4">
+        <BoutonsPartage url={`${process.env.NEXT_PUBLIC_SITE_URL}/articles/${article.id}`} titre={article.title} />
       </div>
     </div>
   )

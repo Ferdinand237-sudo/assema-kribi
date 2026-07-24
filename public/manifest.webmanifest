@@ -1,0 +1,29 @@
+{
+  "name": "ASSEMA",
+  "short_name": "ASSEMA",
+  "description": "Association des Étudiants Mabi — plateforme communautaire",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF6EC",
+  "theme_color": "#2E9BE0",
+  "icons": [
+    {
+      "src": "/logo-assema.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-assema.jpeg",
+      "sizes": "457x457",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-assema.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "maskable"
+    }
+  ]
+}

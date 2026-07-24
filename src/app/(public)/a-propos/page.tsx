@@ -1,7 +1,14 @@
 import { createClient } from '@/lib/supabase/server'
 import ContenuFormatte from '@/components/contenu-formatte'
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'À propos',
+  description: "Histoire, vision, missions et valeurs de l'ASSEMA, l'association des étudiants Mabi de Kribi, Sud Cameroun.",
+  alternates: { canonical: '/a-propos' },
+}
 
 export default async function PageAPropos() {
   const supabase = await createClient()

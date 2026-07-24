@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { deconnecter } from '@/app/(auth)/actions'
 import MenuMobile from './menu-mobile'
 import NavDropdown from './nav-dropdown'
+import NavLink from './nav-link'
 
 const LIENS_PUBLICS_BASE = [
   { href: '/', label: 'Accueil' },
@@ -119,9 +120,9 @@ export default async function SiteHeader() {
 
         <nav className="hidden items-center gap-4 lg:flex">
           {liensPublics.map((l) => (
-            <a key={l.href} href={l.href} className="text-sm text-encre/80 transition-colors hover:text-primaire">
+            <NavLink key={l.href} href={l.href} className="text-sm text-encre/80 transition-colors hover:text-primaire">
               {l.label}
-            </a>
+            </NavLink>
           ))}
 
           <NavDropdown label="Informations" items={liensInformations} badgeTotal={badgeInformations} />

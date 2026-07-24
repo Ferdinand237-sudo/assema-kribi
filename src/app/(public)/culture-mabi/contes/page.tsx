@@ -2,8 +2,15 @@ import { createClient } from '@/lib/supabase/server'
 import Reveal from '@/components/reveal'
 import ZoomableImage from '@/components/zoomable-image'
 import { extraireTexte } from '@/lib/texte'
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Contes & légendes Mabi',
+  description: "Contes, légendes et folklore transmis de génération en génération au sein du peuple Mabi, Kribi, Sud Cameroun.",
+  alternates: { canonical: '/culture-mabi/contes' },
+}
 
 export default async function PageContesLegendes() {
   const supabase = await createClient()

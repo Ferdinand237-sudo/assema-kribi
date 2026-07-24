@@ -2,8 +2,15 @@ import { createClient } from '@/lib/supabase/server'
 import Reveal from '@/components/reveal'
 import ZoomableImage from '@/components/zoomable-image'
 import { extraireTexte } from '@/lib/texte'
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Grandes figures Mabi',
+  description: "Biographies des grandes figures, élites et sages du peuple Mabi de Kribi, Sud Cameroun.",
+  alternates: { canonical: '/culture-mabi/figures' },
+}
 
 function formaterDate(date: string | null) {
   if (!date) return null
@@ -30,7 +37,7 @@ export default async function PageFiguresMabi() {
             <Reveal key={f.id} delayMs={i * 80}>
               <a href={`/culture-mabi/figures/${f.id}`} className="carte-interactive block h-full border border-black/5 bg-white p-4 shadow-sm">
                 <div className="flex items-center gap-3">
-                  {f.photo_url && <ZoomableImage src={f.photo_url} alt="" className="h-16 w-16 rounded-full object-cover" />}
+                  {f.photo_url && <ZoomableImage src={f.photo_url} alt={f.nom} className="h-16 w-16 rounded-full object-cover" />}
                   <div>
                     <p className="font-semibold text-encre">{f.nom}</p>
                     <p className="text-xs text-encre/60">

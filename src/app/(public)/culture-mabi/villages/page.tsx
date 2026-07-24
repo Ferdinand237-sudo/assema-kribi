@@ -2,8 +2,15 @@ import { createClient } from '@/lib/supabase/server'
 import Reveal from '@/components/reveal'
 import ZoomableImage from '@/components/zoomable-image'
 import CarteVillages from '@/components/carte-villages'
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Villages Mabi',
+  description: "Recensement des villages du peuple Mabi à Kribi, Sud Cameroun : population, chefferie traditionnelle, histoire et patrimoine.",
+  alternates: { canonical: '/culture-mabi/villages' },
+}
 
 export default async function PageVillagesMabi() {
   const supabase = await createClient()

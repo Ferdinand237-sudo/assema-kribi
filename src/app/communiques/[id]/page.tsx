@@ -2,8 +2,39 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import ContenuFormatte from '@/components/contenu-formatte'
 import BoutonsPartage from '@/components/boutons-partage'
+import { extraireTexte } from '@/lib/texte'
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const { id } = await params
+  const supabase = await createClient()
+
+  const { data: communique } = await supabase
+    .from('communiques')
+    .select('title, content')
+    .eq('id', id)
+    .eq('canal_public', true)
+    .single()
+
+  if (!communique) return {}
+
+  const description = extraireTexte(communique.content, 160)
+  const url = `/communiques/${id}`
+
+  return {
+    title: communique.title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title: communique.title, description, url, type: 'article' },
+    twitter: { title: communique.title, description },
+  }
+}
 
 export default async function PageCommuniquePublic({
   params,

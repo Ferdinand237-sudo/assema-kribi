@@ -2,8 +2,39 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import ContenuFormatte from '@/components/contenu-formatte'
 import ZoomableImage from '@/components/zoomable-image'
+import { extraireTexte } from '@/lib/texte'
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const { id } = await params
+  const supabase = await createClient()
+
+  const { data: projet } = await supabase
+    .from('projets')
+    .select('titre, description')
+    .eq('id', id)
+    .single()
+
+  if (!projet) return {}
+
+  const description = projet.description
+    ? extraireTexte(projet.description, 160)
+    : `Projet réalisé par l'ASSEMA, l'association des étudiants Mabi de Kribi.`
+  const url = `/projets/${id}`
+
+  return {
+    title: projet.titre,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title: projet.titre, description, url, type: 'article' },
+  }
+}
 
 export default async function PageProjet({
   params,
@@ -33,7 +64,7 @@ export default async function PageProjet({
               {m.type === 'video' ? (
                 <video src={m.url} controls className="h-40 w-full object-cover" />
               ) : (
-                <ZoomableImage src={m.url} alt="" className="h-40 w-full object-cover" />
+                <ZoomableImage src={m.url} alt={projet.titre} className="h-40 w-full object-cover" />
               )}
             </div>
           ))}

@@ -2,8 +2,15 @@ import { createClient } from '@/lib/supabase/server'
 import Reveal from '@/components/reveal'
 import ZoomableImage from '@/components/zoomable-image'
 import { extraireTexte } from '@/lib/texte'
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Nos partenaires',
+  description: "Les partenaires de l'ASSEMA à Kribi et dans le Sud Cameroun : institutions, entreprises et acteurs locaux qui soutiennent la jeunesse Mabi.",
+  alternates: { canonical: '/partenaires' },
+}
 
 export default async function PagePartenaires() {
   const supabase = await createClient()

@@ -3,8 +3,40 @@ import { notFound } from 'next/navigation'
 import ContenuFormatte from '@/components/contenu-formatte'
 import ZoomableImage from '@/components/zoomable-image'
 import BoutonsPartage from '@/components/boutons-partage'
+import { extraireTexte } from '@/lib/texte'
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const { id } = await params
+  const supabase = await createClient()
+
+  const { data: annonce } = await supabase
+    .from('annonces_partenaires')
+    .select('title, content, image_url')
+    .eq('id', id)
+    .eq('status', 'published')
+    .single()
+
+  if (!annonce) return {}
+
+  const description = extraireTexte(annonce.content, 160)
+  const url = `/partenaires/annonces/${id}`
+  const images = annonce.image_url ? [annonce.image_url] : undefined
+
+  return {
+    title: annonce.title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title: annonce.title, description, url, type: 'article', images },
+    twitter: { title: annonce.title, description, images },
+  }
+}
 
 export default async function PageAnnoncePartenaire({
   params,
@@ -36,7 +68,7 @@ export default async function PageAnnoncePartenaire({
       </p>
 
       {annonce.image_url && (
-        <ZoomableImage src={annonce.image_url} alt="" className="mb-6 h-64 w-full rounded-lg object-cover" />
+        <ZoomableImage src={annonce.image_url} alt={annonce.title} className="mb-6 h-64 w-full rounded-lg object-cover" />
       )}
 
       <div className="text-justify">

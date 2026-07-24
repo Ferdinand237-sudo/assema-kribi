@@ -2,8 +2,15 @@ import { createClient } from '@/lib/supabase/server'
 import Reveal from '@/components/reveal'
 import ZoomableImage from '@/components/zoomable-image'
 import { extraireTexte } from '@/lib/texte'
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Arts culinaires Mabi',
+  description: "Recettes, crevettes et traditions culinaires du peuple Mabi de Kribi, Sud Cameroun.",
+  alternates: { canonical: '/culture-mabi/culinaire' },
+}
 
 export default async function PageArtsCulinaires() {
   const supabase = await createClient()

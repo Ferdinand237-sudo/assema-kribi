@@ -1,6 +1,6 @@
 'use client'
 
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 
@@ -21,22 +21,35 @@ export default function CarteVillagesLeaflet({ villages }: { villages: Village[]
   ]
 
   return (
-    <div className="cadre h-72 w-full overflow-hidden border border-black/5 shadow-sm sm:h-96">
-      <MapContainer center={centre} zoom={9} scrollWheelZoom={false} className="h-full w-full">
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {villages.map((v) => (
-          <Marker key={v.id} position={[v.latitude, v.longitude]}>
-            <Popup>
-              <a href={`/culture-mabi/villages/${v.id}`} className="font-medium text-primaire hover:underline">
-                {v.nom}
-              </a>
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
+    <div>
+      <div className="cadre aspect-[4/3] w-full overflow-hidden border border-black/5 shadow-sm sm:aspect-[16/9]">
+        <MapContainer
+          center={centre}
+          zoom={9}
+          scrollWheelZoom={false}
+          zoomControl={false}
+          attributionControl={false}
+          className="h-full w-full"
+        >
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <ZoomControl position="bottomright" />
+          {villages.map((v) => (
+            <Marker key={v.id} position={[v.latitude, v.longitude]}>
+              <Popup>
+                <a href={`/culture-mabi/villages/${v.id}`} className="font-medium text-primaire hover:underline">
+                  {v.nom}
+                </a>
+              </Popup>
+            </Marker>
+          ))}
+        </MapContainer>
+      </div>
+      <p className="mt-1.5 text-[11px] text-encre/40">
+        {'© '}
+        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="hover:underline">
+          OpenStreetMap
+        </a>
+      </p>
     </div>
   )
 }

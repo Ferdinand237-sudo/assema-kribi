@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { modifierVillage } from '../actions'
 import EditeurFormatte from '@/components/editeur-formatte'
 import BoutonEnvoi from '@/components/bouton-envoi'
+import CartePosition from '@/components/carte-position'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,7 +17,7 @@ export default async function PageModifierVillage({
 
   const { data: village } = await supabase
     .from('villages_mabi')
-    .select('id, nom, description, histoire, population_estimee, chef_nom, chef_bio, chef_photo_url')
+    .select('id, nom, description, histoire, population_estimee, chef_nom, chef_bio, chef_photo_url, latitude, longitude')
     .eq('id', id)
     .single()
 
@@ -41,6 +42,10 @@ export default async function PageModifierVillage({
           </div>
         </div>
         <EditeurFormatte name="chefBio" defaultValue={village.chef_bio ?? ''} placeholder="Petite bio du chef" rows={2} />
+        <div>
+          <label className="mb-1 block text-xs text-encre/60">Position sur la carte</label>
+          <CartePosition modifiable latitude={village.latitude} longitude={village.longitude} />
+        </div>
         <BoutonEnvoi texteEnvoi="Enregistrement...">Enregistrer les modifications</BoutonEnvoi>
       </form>
     </div>

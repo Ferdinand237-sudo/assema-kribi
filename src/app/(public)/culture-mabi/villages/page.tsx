@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import Reveal from '@/components/reveal'
 import ZoomableImage from '@/components/zoomable-image'
+import CarteVillages from '@/components/carte-villages'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,14 +10,24 @@ export default async function PageVillagesMabi() {
 
   const { data: villages } = await supabase
     .from('villages_mabi')
-    .select('id, nom, description, population_estimee, chef_nom, chef_photo_url, village_medias(url)')
+    .select('id, nom, description, population_estimee, chef_nom, chef_photo_url, latitude, longitude, village_medias(url)')
     .order('nom')
+
+  const villagesLocalises = (villages ?? []).filter(
+    (v): v is typeof v & { latitude: number; longitude: number } => v.latitude != null && v.longitude != null
+  )
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-12">
       <a href="/culture-mabi" className="text-xs font-medium text-primaire hover:underline">← Culture Mabi</a>
       <h1 className="mb-2 mt-2 font-display text-3xl font-semibold text-encre">Villages Mabi</h1>
       <p className="mb-8 text-encre/70">Le recensement et la mémoire des villages de notre communauté.</p>
+
+      {villagesLocalises.length > 0 && (
+        <div className="mb-8">
+          <CarteVillages villages={villagesLocalises} />
+        </div>
+      )}
 
       {villages && villages.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-3">

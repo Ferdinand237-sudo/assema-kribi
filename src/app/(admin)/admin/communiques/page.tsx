@@ -105,6 +105,11 @@ export default async function PageAdminCommuniques() {
             )}
             <div className="mt-2 flex gap-3 border-t border-black/5 pt-2">
               <a href={`/admin/communiques/${c.id}`} className="text-xs font-medium text-primaire hover:underline">Modifier</a>
+              {c.canal_public && (
+                <a href={`/communiques/${c.id}`} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-primaire hover:underline">
+                  Voir / Partager ↗
+                </a>
+              )}
               <form action={supprimerCommunique}>
                 <input type="hidden" name="communiqueId" value={c.id} />
                 <BoutonConfirmation message="Supprimer définitivement ce communiqué ?" className="text-xs font-medium text-erreur hover:underline">

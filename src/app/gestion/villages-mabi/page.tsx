@@ -9,6 +9,7 @@ import {
 } from './actions'
 import EditeurFormatte from '@/components/editeur-formatte'
 import BoutonConfirmation from '@/components/bouton-confirmation'
+import CartePosition from '@/components/carte-position'
 
 export const dynamic = 'force-dynamic'
 
@@ -36,6 +37,10 @@ export default async function PageGestionVillages() {
           <input type="file" name="chefPhoto" accept="image/*" className="champ-fichier" />
         </div>
         <EditeurFormatte name="chefBio" placeholder="Petite bio du chef" rows={2} />
+        <div>
+          <label className="mb-1 block text-xs text-encre/60">Position sur la carte</label>
+          <CartePosition modifiable />
+        </div>
         <button type="submit" className="bouton bouton-primaire">
           Créer le village
         </button>

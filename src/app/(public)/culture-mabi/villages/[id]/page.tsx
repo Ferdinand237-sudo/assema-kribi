@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import ContenuFormatte from '@/components/contenu-formatte'
 import ZoomableImage from '@/components/zoomable-image'
+import CartePosition from '@/components/carte-position'
 
 export const dynamic = 'force-dynamic'
 
@@ -39,6 +40,12 @@ export default async function PageVillage({
               {m.legende && <p className="mt-1 text-xs text-encre/60">{m.legende}</p>}
             </div>
           ))}
+        </div>
+      )}
+
+      {village.latitude != null && village.longitude != null && (
+        <div className="mb-8">
+          <CartePosition latitude={village.latitude} longitude={village.longitude} />
         </div>
       )}
 

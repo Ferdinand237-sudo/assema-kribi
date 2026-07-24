@@ -79,6 +79,7 @@ export default async function SiteHeader() {
   const liensInformations = user
     ? [
         { href: '/messagerie', label: 'Messagerie', badge: messagesNonLus },
+        { href: '/discussions', label: 'Discussions privées' },
         { href: '/communiques', label: 'Communiqués', badge: communiquesNonLus },
         ...(estRedacteur ? [{ href: '/redaction', label: 'Rédaction' }] : []),
       ]

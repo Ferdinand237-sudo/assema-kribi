@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import ContenuFormatte from '@/components/contenu-formatte'
+import BoutonsPartage from '@/components/boutons-partage'
 
 export const dynamic = 'force-dynamic'
 
@@ -42,6 +43,10 @@ export default async function PageCommuniquePublic({
 
       <div className="text-justify">
         <ContenuFormatte texte={communique.content} />
+      </div>
+
+      <div className="mt-8 border-t border-black/10 pt-4">
+        <BoutonsPartage url={`${process.env.NEXT_PUBLIC_SITE_URL}/communiques/${communique.id}`} titre={communique.title} />
       </div>
     </div>
   )

@@ -14,6 +14,8 @@ export async function creerVillage(formData: FormData) {
   const chefNom = formData.get('chefNom') as string
   const chefBio = formData.get('chefBio') as string
   const chefPhoto = formData.get('chefPhoto') as File
+  const latitude = formData.get('latitude') as string
+  const longitude = formData.get('longitude') as string
 
   const { data: village, error } = await supabase
     .from('villages_mabi')
@@ -24,6 +26,8 @@ export async function creerVillage(formData: FormData) {
       population_estimee: populationEstimee ? parseInt(populationEstimee, 10) : null,
       chef_nom: chefNom || null,
       chef_bio: chefBio || null,
+      latitude: latitude ? parseFloat(latitude) : null,
+      longitude: longitude ? parseFloat(longitude) : null,
       created_by: profile.id,
     })
     .select('id')
@@ -62,6 +66,8 @@ export async function modifierVillage(formData: FormData) {
   const chefNom = formData.get('chefNom') as string
   const chefBio = formData.get('chefBio') as string
   const chefPhoto = formData.get('chefPhoto') as File
+  const latitude = formData.get('latitude') as string
+  const longitude = formData.get('longitude') as string
 
   await supabase
     .from('villages_mabi')
@@ -72,6 +78,8 @@ export async function modifierVillage(formData: FormData) {
       population_estimee: populationEstimee ? parseInt(populationEstimee, 10) : null,
       chef_nom: chefNom || null,
       chef_bio: chefBio || null,
+      latitude: latitude ? parseFloat(latitude) : null,
+      longitude: longitude ? parseFloat(longitude) : null,
     })
     .eq('id', id)
 

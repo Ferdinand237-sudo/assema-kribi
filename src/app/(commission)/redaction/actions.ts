@@ -83,17 +83,24 @@ export async function uploaderImageContenu(formData: FormData): Promise<{ url: s
   return { url: data.publicUrl }
 }
 
-export async function supprimerArticle(formData: FormData) {
+export async function supprimerArticle(formData: FormData): Promise<{ erreur?: string }> {
   const { supabase, profile } = await requireRedacteur()
 
   const articleId = formData.get('articleId') as string
 
-  await supabase
+  const { data, error } = await supabase
     .from('articles')
     .delete()
     .eq('id', articleId)
     .eq('author_id', profile.id)
+    .select('id')
 
   revalidatePath('/redaction')
   revalidatePath('/admin/articles')
+
+  if (error || !data?.length) {
+    return { erreur: "Suppression impossible. Vérifie que tu as les droits nécessaires." }
+  }
+
+  return {}
 }

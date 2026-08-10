@@ -48,7 +48,7 @@ export default function RedactionFil({
   rubriquesCulture: RubriqueCulture[]
   estAdminOuPresident: boolean
   creerArticle: (formData: FormData) => Promise<void>
-  supprimerArticle: (formData: FormData) => Promise<void>
+  supprimerArticle: (formData: FormData) => Promise<{ erreur?: string }>
   uploaderImageContenu: (formData: FormData) => Promise<{ url: string } | { erreur: string }>
 }) {
   const [articlesOptimistes, appliquer] = useOptimistic(
@@ -86,7 +86,10 @@ export default function RedactionFil({
 
   async function supprimerArticleOptimiste(id: string, formData: FormData) {
     appliquer({ type: 'retirer', id })
-    await supprimerArticle(formData)
+    const resultat = await supprimerArticle(formData)
+    if (resultat?.erreur) {
+      alert(resultat.erreur)
+    }
   }
 
   return (

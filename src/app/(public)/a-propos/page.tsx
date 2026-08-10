@@ -24,7 +24,7 @@ export default async function PageAPropos() {
 
       {c.histoire && (
         <section className="mb-8">
-          <h2 className="mb-2 text-center font-display text-xl font-semibold text-primaire">Histoire</h2>
+          <h2 className="mb-2 text-center font-display text-xl font-semibold text-primaire">Présentation générale</h2>
           <div className="text-justify"><ContenuFormatte texte={c.histoire} /></div>
         </section>
       )}
@@ -57,7 +57,7 @@ export default async function PageAPropos() {
       {c.valeurs && (
         <section>
           <h2 className="mb-2 text-center font-display text-xl font-semibold text-primaire">Valeurs</h2>
-          <p className="text-center text-encre/80">{c.valeurs}</p>
+          <div className="text-justify"><ContenuFormatte texte={c.valeurs} /></div>
         </section>
       )}
     </div>

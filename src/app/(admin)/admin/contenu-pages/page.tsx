@@ -47,11 +47,11 @@ export default async function PageContenuPages() {
 
       <section id="a-propos" className="cadre mb-10 scroll-mt-6 border border-black/10 bg-white p-4 pt-5 shadow-sm sm:p-6 sm:pt-7">
         <h2 className="mb-1 font-display text-lg font-semibold text-encre">Page "À propos"</h2>
-        <p className="mb-4 text-xs text-encre/60">Histoire et vision bénéficient de la mise en forme riche (titres, gras, alignement...).</p>
+        <p className="mb-4 text-xs text-encre/60">Présentation générale, vision et valeurs bénéficient de la mise en forme riche (titres, gras, alignement...).</p>
         <form action={mettreAJourAPropos} className="space-y-4">
           <div>
-            <label className="mb-1 block text-xs font-medium text-encre/70">Histoire</label>
-            <EditeurFormatte name="histoire" defaultValue={aPropos.histoire ?? ''} placeholder="L'histoire de l'association" rows={4} />
+            <label className="mb-1 block text-xs font-medium text-encre/70">Présentation générale</label>
+            <EditeurFormatte name="histoire" defaultValue={aPropos.histoire ?? ''} placeholder="Qui est l'ASSEMA, son siège, sa devise, son slogan..." rows={4} />
           </div>
           <div>
             <label className="mb-1 block text-xs font-medium text-encre/70">Vision</label>
@@ -67,7 +67,7 @@ export default async function PageContenuPages() {
           </div>
           <div>
             <label className="mb-1 block text-xs font-medium text-encre/70">Valeurs</label>
-            <input name="valeurs" defaultValue={aPropos.valeurs ?? ''} className="champ text-sm" />
+            <EditeurFormatte name="valeurs" defaultValue={aPropos.valeurs ?? ''} placeholder="Une valeur par paragraphe, ex: Unité — description..." rows={3} />
           </div>
           <BoutonEnvoi texteEnvoi="Enregistrement...">Enregistrer</BoutonEnvoi>
         </form>

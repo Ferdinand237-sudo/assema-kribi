@@ -4,8 +4,8 @@ export default function JsonLdOrganisation() {
     "@type": "Organization",
     name: "ASSEMA — Association des Étudiants Mabi",
     alternateName: "ASSEMA Kribi",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://assema-kribi.netlify.app",
-    logo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://assema-kribi.netlify.app"}/logo-assema.jpeg`,
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://assema.org",
+    logo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://assema.org"}/logo-assema.jpeg`,
     description:
       "Association communautaire des étudiants originaires de Kribi et du peuple Mabi (Sud Cameroun), au Cameroun comme dans la diaspora.",
     areaServed: {

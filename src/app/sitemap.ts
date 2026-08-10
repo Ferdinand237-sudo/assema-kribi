@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { createClient } from '@supabase/supabase-js'
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://assema-kribi.netlify.app'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://assema.org'
 
 const PAGES_STATIQUES = [
   '', '/a-propos', '/contact', '/bureau-executif', '/culture-mabi',

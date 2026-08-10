@@ -28,7 +28,7 @@ const DESCRIPTION_SITE =
   "ASSEMA (Association des Étudiants Mabi) — plateforme communautaire des étudiants originaires de Kribi et du Sud Cameroun : culture Mabi, villages (Bikondo, Dombè, Maka'awum...), grandes figures, contes, arts culinaires, projets étudiants et vie associative.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://assema-kribi.netlify.app"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://assema.org"),
   title: {
     default: "ASSEMA Kribi",
     template: "%s · ASSEMA Kribi",
